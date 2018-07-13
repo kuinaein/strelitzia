@@ -1,4 +1,6 @@
-let mix = require('laravel-mix');
+const mix = require('laravel-mix');
+
+const path = require('path');
 
 /*
  |--------------------------------------------------------------------------
@@ -12,4 +14,12 @@ let mix = require('laravel-mix');
  */
 
 mix.js('resources/assets/js/app.js', 'public/js')
-   .sass('resources/assets/sass/app.scss', 'public/css');
+  .webpackConfig({
+    resolve: {
+      extensions: ['.js', '.json', '.vue'],
+      alias: {
+        '@': path.resolve(__dirname, 'resources/assets/js'),
+      },
+    },
+  })
+  .sass('resources/assets/sass/app.scss', 'public/css');

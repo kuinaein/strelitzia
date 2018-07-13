@@ -8,7 +8,7 @@
 import './bootstrap';
 
 import Vue from 'vue';
-import ExampleComponent from './components/ExampleComponent';
+import Frame from '@/core/Frame';
 
 window.Vue = Vue;
 
@@ -18,8 +18,4 @@ window.Vue = Vue;
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', ExampleComponent);
-
-window.theApp = new Vue({
-  el: '#app'
-});
+window.theApp = new Vue(Frame).$mount('#app');

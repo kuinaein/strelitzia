@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+use Monolog\Handler\RotatingFileHandler;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Monolog\Processor\IntrospectionProcessor;
+use Monolog\Processor\WebProcessor;
+
 /*
 |--------------------------------------------------------------------------
 | Create The Application
@@ -42,6 +48,27 @@ $app->singleton(
   Illuminate\Contracts\Debug\ExceptionHandler::class,
   App\Exceptions\Handler::class
 );
+
+$app->configureMonologUsing(function ($monolog) {
+  $monolog->pushHandler(new StreamHandler('php://stderr'));
+  $monolog->pushHandler(new RotatingFileHandler(
+  storage_path('logs/strelitzia.log'),
+  30
+  ));
+
+  // クラス名等を extra フィールドに挿入するプロセッサを生成
+  $ip = new IntrospectionProcessor(Logger::DEBUG, ['Illuminate\\']);
+
+  // IPアドレス等を extra フィールドに挿入するプロセッサを生成
+  $wp = new WebProcessor();
+
+  foreach ($monolog->getHandlers() as $handler) {
+    $handler->pushProcessor($ip);
+    $handler->pushProcessor($wp);
+  }
+
+  return $monolog;
+});
 
 /*
 |--------------------------------------------------------------------------

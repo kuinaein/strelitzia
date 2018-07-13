@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-use Illuminate\Foundation\Inspiring;
-
 /*
 |--------------------------------------------------------------------------
 | Console Routes
@@ -15,6 +13,8 @@ use Illuminate\Foundation\Inspiring;
 |
 */
 
-Artisan::command('inspire', function (): void {
-  $this->comment(Inspiring::quote());
-})->describe('Display an inspiring quote');
+Artisan::command('stre:cs', function (): void {
+  @unlink(base_path('.php_cs.cache'));
+  passthru(base_path('vendor/bin/php-cs-fixer') . ' fix');
+  passthru('npm run lint-fix');
+})->describe('lintとコード整形');

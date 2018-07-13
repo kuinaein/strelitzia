@@ -2,8 +2,6 @@ import _ from 'lodash';
 import jQuery from 'jquery';
 import axios from 'axios';
 
-import 'bootstrap-sass';
-
 window._ = _;
 
 /**
@@ -12,11 +10,14 @@ window._ = _;
  * code may be modified to fit the specific needs of your application.
  */
 
-// try {
-window.$ = window.jQuery = jQuery;
+try {
+  window.$ = window.jQuery = jQuery;
 
-//   require('bootstrap-sass');
-// } catch (e) {}
+  // eslint-disable-next-line no-undef
+  require('bootstrap-sass');
+} catch (e) {
+  console.error(e);
+}
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
