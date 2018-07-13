@@ -13,4 +13,4 @@ declare(strict_types=1);
 |
 */
 
-Route::view('/', 'index');
+Route::view('/{path}', 'index')->where('path', '.*');

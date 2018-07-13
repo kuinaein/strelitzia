@@ -8,9 +8,13 @@
 import './bootstrap';
 
 import Vue from 'vue';
+import VueRouter from 'vue-router';
+
 import Frame from '@/core/Frame';
 
+
 window.Vue = Vue;
+Vue.use(VueRouter);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -18,4 +22,9 @@ window.Vue = Vue;
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-window.theApp = new Vue(Frame).$mount('#app');
+window.theApp = new Vue(Object.assign({}, Frame, {
+  el: '#app',
+  router: new VueRouter({
+    mode: 'history',
+  }),
+}));
