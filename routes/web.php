@@ -13,4 +13,5 @@ declare(strict_types=1);
 |
 */
 
-Route::view('/{path}', 'index')->where('path', '.*');
+// とりあえす /api とかぶる場合は404にする
+Route::view('/{path}', 'index')->where('path', '^(|[^a].*|a[^p].*)$');
