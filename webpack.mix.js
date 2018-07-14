@@ -20,7 +20,7 @@ Vue.use(VueI18n);
 
 const i18n = new VueI18n({
   locale: 'ja',
-  messages: require(path.join(__dirname, 'resources/assets/js/strings.json')),
+  messages: require(path.join(__dirname, 'resources/assets/js/core/strings.json')),
 });
 
 mix.extend('vueI18n', (webpackConfig, ...args) => {

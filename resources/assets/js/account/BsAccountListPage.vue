@@ -12,7 +12,8 @@
         th タイプ
         th 名称
     tbody
-      tr(v-for="a of bsAccounts")
+      tr(v-for="a of accountTitles"
+          v-if="targets[a.type]")
         td(v-t="'enum.accountType.' + a.type")
         td {{ a.name }}
   modal(ref="createDlg")
@@ -24,7 +25,7 @@
       .form-group
         label タイプ
         select.form-control(v-model="editingAccount.type" required)
-          option(v-for="t in [AccountTitleType.ASSET, AccountTitleType.LIABILITY, AccountTitleType.NET_ASSET]"
+          option(v-for="t in Object.keys(targets)"
               :value="t" v-t="'enum.accountType.' + t"
               :key="'editing-account-type-choice-' + t")
       .form-group
@@ -43,6 +44,13 @@ import axios from 'axios';
 import { mapConstants } from '@/util/vue-util';
 
 import { AccountTitleType } from '@/account/constants';
+import { AccountModule } from '@/account/AccountModule';
+
+const targets = {
+  [AccountTitleType.ASSET]: true,
+  [AccountTitleType.LIABILITY]: true,
+  [AccountTitleType.NET_ASSET]: true,
+};
 
 export default {
   data () {
@@ -57,25 +65,20 @@ export default {
     };
   },
   computed: {
-    ...mapConstants({AccountTitleType}),
+    ...mapConstants({targets}),
     ...mapState(['apiRoot']),
-  },
-  mounted () {
-    axios.get(this.apiRoot + '/account/bs-account').then(res => {
-      this.bsAccounts = res.data.data;
-    }).catch(err => {
-      alert('エラー！: ' + err);
-    });
+    ...AccountModule.mapState(['accountTitles'])
   },
   methods: {
+    ...AccountModule.mapActions([AccountModule.actionKey.LOAD_ALL]),
     create () {
       this.editingAccount = this.$options.data().editingAccount;
       this.$refs.createDlg.open();
     },
     doCreate () {
       axios.post(this.apiRoot + '/account/bs-account', this.editingAccount).then(res => {
-        this.bsAccounts.push(res.data.data);
         alert(`勘定科目「${this.editingAccount.name}」を追加しました`);
+        this[AccountModule.actionKey.LOAD_ALL]();
       }).catch(err => {
         alert(`勘定科目「${this.editingAccount.name}」の追加に失敗しました:  ${err}`);
       });

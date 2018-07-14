@@ -19,11 +19,10 @@ class BsAccountSaveService {
    * @param BsAccount $bsAccount
    * @throws \Illuminate\Validation\ValidationException
    */
-  public function create(BsAccount $bsAccount): BsAccount {
+  public function create(BsAccount $bsAccount): void {
     $this->validate($bsAccount);
     $a = $this->dao->create($bsAccount);
-    info('資産・負債科目作成: ' . $a->name);
-    return $a;
+    info('資産・負債科目の追加',  ['新科目' => $a]);
   }
 
   /**

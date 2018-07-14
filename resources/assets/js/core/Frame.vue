@@ -11,10 +11,22 @@ div
       router-link.navbar-brand(to="/") すとれりちあ
     .collapse.navbar-collapse#stre-navbar: ul.nav.navbar-nav
       li: router-link(to="/bs-account") 資産・負債科目
-  router-view
+  .container(v-if="null === accountTitles") ロード中...
+  router-view(v-else)
 </template>
 
 <script>
+import { AccountModule } from '@/account/AccountModule';
+
 export default {
+  computed: AccountModule.mapState(['accountTitles']),
+  mounted () {
+    this.loadAllAccountData().catch(err => {
+      alert('エラー！: ' + err);
+    });
+  },
+  methods: AccountModule.mapActions({
+    loadAllAccountData: AccountModule.actionKey.LOAD_ALL,
+  }),
 };
 </script>

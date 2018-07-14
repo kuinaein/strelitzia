@@ -9,7 +9,7 @@ use App\Exceptions\BadVoSourceException;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Model;
 
-class BsAccount implements Arrayable, \JsonSerializable {
+class BsAccount implements AccountTitle, Arrayable, \JsonSerializable {
   /**
    * @var AccountTitleModel
    */

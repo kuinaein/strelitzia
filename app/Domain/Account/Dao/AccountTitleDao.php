@@ -9,9 +9,9 @@ use App\Domain\Account\Vo\AccountTitleType;
 use App\Domain\Account\Vo\BsAccount;
 use Illuminate\Support\Collection;
 
-class BsAccountDao {
+class AccountTitleDao {
   /**
-   * @var AccountTitleModel
+   * @var AccountTitleModel;
    */
   private $repo;
 
@@ -19,8 +19,12 @@ class BsAccountDao {
     $this->repo = $repo;
   }
 
-  public function create(BsAccount $bsAccount): BsAccount {
-    $bsAccount->unwrap()->save();
-    return $bsAccount;
+  /**
+   * @return AccountTitle[]
+   */
+  public function all(): Collection {
+    return $this->repo->all()->map(function ($m) {
+      return new BsAccount($m);
+    });
   }
 }

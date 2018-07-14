@@ -21,21 +21,14 @@ class BsAccountApiController extends Controller {
   }
 
   /**
-   * Display a listing of the resource.
-   */
-  public function index(): array {
-    return ['data' => $this->dao->all(), 'messsage' => 'OK'];
-  }
-
-  /**
    * Store a newly created resource in storage.
    *
    * @param \Illuminate\Http\Request $request
    */
   public function store(Request $request): array {
     $a = new BsAccount($request->all());
-    $a = $this->saveService->create($a);
-    return ['data' => $a, 'messsage' => 'OK'];
+    $this->saveService->create($a);
+    return ['messsage' => 'OK'];
   }
 
   /**

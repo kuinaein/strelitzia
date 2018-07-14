@@ -14,5 +14,6 @@ declare(strict_types=1);
 */
 
 Route::group(['prefix' => 'account', 'namespace' => 'Account'], function ($router): void {
-  Route::resource('bs-account', 'BsAccountApiController', ['except' => ['create']]);
+  Route::get('/', 'AccountApiController@index');
+  Route::resource('bs-account', 'BsAccountApiController', ['only' => ['store']]);
 });
