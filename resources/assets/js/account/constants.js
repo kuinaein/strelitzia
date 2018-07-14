@@ -1,0 +1,8 @@
+export const AccountTitleType = {
+  ASSET: 'ASSET',
+  LIABILITY: 'LIABILITY',
+  NET_ASSET: 'NET_ASSET',
+  REVENUE: 'REVENUE',
+  EXPENSE: 'EXPENSE',
+  OTHER: 'OTHER',
+};

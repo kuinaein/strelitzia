@@ -4,42 +4,38 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Account;
 
+use App\Domain\Account\Dao\BsAccountDao;
+use App\Domain\Account\Service\BsAccountSaveService;
+use App\Domain\Account\Vo\BsAccount;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class BsAccountApiController extends Controller {
-  /**
-   * Display a listing of the resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
-  public function index(): Response {
-    return response(['data' => [
-      // this.bsAccounts = [
-      //   { type: 'ASSET', name: '現金' },
-      //   { type: 'ASSET', name: '預金' },
-      // ];
-      ['type' => 'ASSET', 'name' => '現金'],
-      ['type' => 'ASSET', 'name' => '預金'],
-    ]]);
+  private $dao;
+
+  private $saveService;
+
+  public function __construct(BsAccountDao $dao, BsAccountSaveService $saveService) {
+    $this->dao = $dao;
+    $this->saveService = $saveService;
   }
 
   /**
-   * Show the form for creating a new resource.
-   *
-   * @return \Illuminate\Http\Response
+   * Display a listing of the resource.
    */
-  public function create() {
+  public function index(): array {
+    return ['data' => $this->dao->all(), 'messsage' => 'OK'];
   }
 
   /**
    * Store a newly created resource in storage.
    *
    * @param \Illuminate\Http\Request $request
-   * @return \Illuminate\Http\Response
    */
-  public function store(Request $request) {
+  public function store(Request $request): array {
+    $a = new BsAccount($request->all());
+    $a = $this->saveService->create($a);
+    return ['data' => $a, 'messsage' => 'OK'];
   }
 
   /**
