@@ -7,7 +7,6 @@ namespace App\Domain\Account\Vo;
 use App\Domain\Account\Model\AccountTitleModel;
 use App\Exceptions\BadVoSourceException;
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Database\Eloquent\Model;
 
 class BsAccount implements AccountTitle, Arrayable, \JsonSerializable {
   /**
@@ -26,12 +25,15 @@ class BsAccount implements AccountTitle, Arrayable, \JsonSerializable {
       $ar = [];
 
       foreach ($src as $k => $v) {
-        if ($k === 'updatedAt') {
-          // 通常fillableではないが楽観的ロックのために必要
-          $ar[MODEL::UPDATED_AT] = $v;
-        } else {
-          $ar[snake_case($k)] = $v;
-        }
+        switch ($k) {
+  case 'id':
+  case 'updatedAt':
+  // 通常fillableではないがバリデーションのために必要
+  $this->model->{snake_case($k)} = $v;
+  break;
+  default:
+  $ar[snake_case($k)] = $v;
+  }
       }
       $this->model->fill($ar);
     } else {
@@ -42,21 +44,30 @@ class BsAccount implements AccountTitle, Arrayable, \JsonSerializable {
   }
 
   public function __get($name) {
-    return $this->model->{snake_case($name)};
+    return $this->unwrap()->{snake_case($name)};
   }
 
   public function __set($name, $value) {
-    return $this->model->{snake_case($name)} = $value;
+    return $this->unwrap()->{snake_case($name)} = $value;
   }
 
   public function unwrap(): AccountTitleModel {
     return $this->model;
   }
 
+  /**
+   * @param BsAccount $another
+   * @return $this
+   */
+  public function fill(self $another): self {
+    $this->unwrap()->fill($another->toArray());
+    return $this;
+  }
+
   public function toArray(): array {
     $result = [];
 
-    foreach ($this->model->toArray() as $k => $v) {
+    foreach ($this->unwrap()->toArray() as $k => $v) {
       $result[camel_case($k)] = $v;
     }
     return $result;

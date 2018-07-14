@@ -20,7 +20,19 @@ Vue.use(VueI18n);
 
 const i18n = new VueI18n({
   locale: 'ja',
-  messages: require(path.join(__dirname, 'resources/assets/js/core/strings.json')),
+  messages: require(path.join(__dirname, 'resources/assets/js/app/strings.json')),
+});
+
+mix.extend('vuePug', (webpackConfig, ...args) => {
+  for (const rule of webpackConfig.module.rules) {
+    if ('vue-loader' !== rule.loader) {
+      continue;
+    }
+    rule.options.loaders.pug = {
+      loader: 'pug-html-loader',
+      options: { basedir: path.resolve(__dirname, 'resources/assets/js') },
+    }
+  }
 });
 
 mix.extend('vueI18n', (webpackConfig, ...args) => {
@@ -43,5 +55,6 @@ mix.js('resources/assets/js/app.js', 'public/js')
       },
     },
   })
+  .vuePug()
   .vueI18n()
   .sass('resources/assets/sass/app.scss', 'public/css');

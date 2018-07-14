@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Account;
 
 use App\Domain\Account\Dao\AccountTitleDao;
-use App\Domain\Account\Service\BsAccountSaveService;
-use App\Domain\Account\Vo\BsAccount;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
 class AccountApiController extends Controller {
   private $dao;

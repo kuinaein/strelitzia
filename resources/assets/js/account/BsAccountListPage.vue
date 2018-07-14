@@ -1,23 +1,27 @@
 <template lang="pug">
+include /components/mixin
+
 .container
-  //-
-    template(v-if="null === bsAccounts") ロード中...
-    template(v-else)
   button.btn.btn-default(type="button" @click="create")
-    span.glyphicon.glyphicon-plus
+    +bsIcon("plus")
     span &nbsp;追加
   table.table.table-bordered.table-striped
     thead
       tr
+        th 操作
         th タイプ
+        th パス
         th 名称
     tbody
-      tr(v-for="a of accountTitles"
-          v-if="targets[a.type]")
+      tr(v-for="a of bsAccounts")
+        td: button.btn.btn-primary(type="button" @click="edit(a.id)"): +bsIcon("edit")
         td(v-t="'enum.accountType.' + a.type")
+        td {{ a.path }}
         td {{ a.name }}
   modal(ref="createDlg")
-    template(slot="title") 資産・負債科目の追加
+    template(slot="title") 資産・負債科目の
+      template(v-if="editingAccount.id") 編集
+      template(v-else) 追加
     form
       .form-group
         label 科目名
@@ -25,28 +29,29 @@
       .form-group
         label タイプ
         select.form-control(v-model="editingAccount.type" required)
-          option(v-for="t in Object.keys(targets)"
+          option(v-for="t in Object.keys(targetTypes)"
               :value="t" v-t="'enum.accountType.' + t"
               :key="'editing-account-type-choice-' + t")
       .form-group
         label 親科目
         select.form-control(v-model="editingAccount.parentId")
-          option(value='0') （なし）
-          option(v-for="a in bsAccounts" :value="a.id"
+          option(value="0") （なし）
+          option(v-for="a in parentCandidates" :value="a.id"
               :key="'editing-account-parent-choice-' + a.id") {{ a.name }}
-      button.btn.btn-primary(type="button" @click="doCreate") 追加
+      button.btn.btn-primary(type="button" @click="doSave") 保存
 </template>
 
 <script>
 import { mapState } from 'vuex';
 import axios from 'axios';
 
+import { csvContains } from '@/util/lang';
 import { mapConstants } from '@/util/vue-util';
 
 import { AccountTitleType } from '@/account/constants';
 import { AccountModule } from '@/account/AccountModule';
 
-const targets = {
+const targetTypes = {
   [AccountTitleType.ASSET]: true,
   [AccountTitleType.LIABILITY]: true,
   [AccountTitleType.NET_ASSET]: true,
@@ -55,9 +60,7 @@ const targets = {
 export default {
   data () {
     return {
-      bsAccounts: null,
       editingAccount: {
-        id: 0,
         name: '',
         type: AccountTitleType.ASSET,
         parentId: 0,
@@ -65,9 +68,16 @@ export default {
     };
   },
   computed: {
-    ...mapConstants({targets}),
+    ...mapConstants({targetTypes}),
     ...mapState(['apiRoot']),
-    ...AccountModule.mapState(['accountTitles'])
+    ...AccountModule.mapState(['accountTitles', 'accountTitleMap']),
+    bsAccounts () {
+      return (this.accountTitles || []).filter(a => targetTypes[a.type]);
+    },
+    parentCandidates () {
+      return this.bsAccounts
+        .filter(a => !csvContains(a.path, this.editingAccount.path, ' / '));
+    },
   },
   methods: {
     ...AccountModule.mapActions([AccountModule.actionKey.LOAD_ALL]),
@@ -75,14 +85,21 @@ export default {
       this.editingAccount = this.$options.data().editingAccount;
       this.$refs.createDlg.open();
     },
-    doCreate () {
-      axios.post(this.apiRoot + '/account/bs-account', this.editingAccount).then(res => {
-        alert(`勘定科目「${this.editingAccount.name}」を追加しました`);
+    edit (id) {
+      this.editingAccount = Object.assign({}, this.accountTitleMap[id]);
+      this.$refs.createDlg.open();
+    },
+    doSave () {
+      const promise = 0 === this.editingAccount.id
+        ? axios.post(`${this.apiRoot}/account/bs-account`, this.editingAccount)
+        : axios.put(`${this.apiRoot}/account/bs-account/${this.editingAccount.id}`, this.editingAccount);
+      promise.then(() => {
+        alert(`勘定科目「${this.editingAccount.name}」を保存しました`);
         this[AccountModule.actionKey.LOAD_ALL]();
+        this.$refs.createDlg.close();
       }).catch(err => {
-        alert(`勘定科目「${this.editingAccount.name}」の追加に失敗しました:  ${err}`);
+        alert(`勘定科目「${this.editingAccount.name}」の保存に失敗しました:  ${err}`);
       });
-      this.$refs.createDlg.close();
     },
   },
 };

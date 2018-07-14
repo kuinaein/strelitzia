@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Account\Dao;
 
 use App\Domain\Account\Model\AccountTitleModel;
-use App\Domain\Account\Vo\AccountTitleType;
 use App\Domain\Account\Vo\BsAccount;
-use Illuminate\Support\Collection;
 
 class BsAccountDao {
   /**
@@ -19,7 +17,7 @@ class BsAccountDao {
     $this->repo = $repo;
   }
 
-  public function create(BsAccount $bsAccount): BsAccount {
+  public function save(BsAccount $bsAccount): BsAccount {
     $bsAccount->unwrap()->save();
     return $bsAccount;
   }

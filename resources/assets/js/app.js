@@ -10,14 +10,14 @@ import './bootstrap';
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 
-import strings from '@/core/strings.json';
+import strings from '@/app/strings.json';
 
-import { router } from '@/core/router';
-import { store } from '@/core/vuex';
+import { router } from '@/app/router';
+import { store } from '@/app/vuex';
 
 import Modal from '@/components/Modal';
 
-import Frame from '@/core/Frame';
+import Frame from '@/app/Frame';
 
 if ('development' === process.env.NODE_ENV) {
   window.axios.interceptors.response.use(res => {

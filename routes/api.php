@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Illuminate\Routing\Router;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,7 +15,7 @@ declare(strict_types=1);
 |
 */
 
-Route::group(['prefix' => 'account', 'namespace' => 'Account'], function ($router): void {
-  Route::get('/', 'AccountApiController@index');
-  Route::resource('bs-account', 'BsAccountApiController', ['only' => ['store']]);
+Route::group(['prefix' => 'account', 'namespace' => 'Account'], function (Router $router): void {
+  $router->resource('/', 'AccountApiController', ['only' => ['index']]);
+  $router->resource('bs-account', 'BsAccountApiController', ['only' => ['store', 'update']]);
 });
