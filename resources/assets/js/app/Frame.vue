@@ -1,16 +1,12 @@
 <template lang="pug">
 div
-  .navbar.navbar-default: .container-fluid
-    .navbar-header
-      button.navbar-toggle.collapsed(type="button"
-          data-toggle="collapse" data-target="#stre-navbar")
-        span.sr-only メニュー開閉
-        span.icon-bar
-        span.icon-bar
-        span.icon-bar
-      router-link.navbar-brand(to="/") すとれりちあ
-    .collapse.navbar-collapse#stre-navbar: ul.nav.navbar-nav
-      li: router-link(to="/bs-account") 資産・負債科目
+  .navbar.navbar-expand-sm.navbar-light.bg-light
+    router-link.navbar-brand(to="/") すとれりちあ
+    button.navbar-toggler(type="button" aria-label="メニュー開閉" data-toggle="collapse"
+        data-target="#stre-navbar" area-controls="stre-navbar" aria-expanded="false")
+      span.navbar-toggler-icon
+    #stre-navbar.collapse.navbar-collapse: ul.navbar-nav.mr-auto
+      li.nav-item: router-link.nav-link(to="/bs-account") 資産・負債科目
   .container(v-if="null === accountTitles") ロード中...
   router-view(v-else)
 </template>

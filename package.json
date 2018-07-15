@@ -13,10 +13,12 @@
     },
     "devDependencies": {
         "axios": "^0.17",
-        "bootstrap-sass": "^3.3.7",
+        "bootstrap-honoka": "^4.0.0",
+        "circular-dependency-plugin": "^4.0.0",
         "cross-env": "^5.1",
         "eslint": "^5.1.0",
         "eslint-plugin-vue": "^4.5.0",
+        "font-awesome-scss": "^1.0.0",
         "jquery": "^3.2",
         "laravel-mix": "^2.1.11",
         "lodash": "^4.17.4",

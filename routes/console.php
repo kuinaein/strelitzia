@@ -20,7 +20,7 @@ Artisan::command('stre:cs', function (): void {
 })->describe('lintとコード整形');
 
 Artisan::command('stre:dev', function (): void {
-  $spawnCmd = 'nohup xfce4-terminal --tab -T ' . config('app.name') . ' -x ';
+  $spawnCmd = 'nohup xfce4-terminal --tab -T \'' . config('app.name') . '\' -x ';
   passthru('npm run dev');
   exec($spawnCmd . 'npm run watch');
   exec($spawnCmd . 'php artisan serve');

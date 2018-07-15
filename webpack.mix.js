@@ -1,6 +1,7 @@
 const mix = require('laravel-mix');
 
 const path = require('path');
+const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 const Vue = require('vue');
 const VueI18n = require('vue-i18n');
@@ -18,11 +19,6 @@ Vue.use(VueI18n);
  |
  */
 
-const i18n = new VueI18n({
-  locale: 'ja',
-  messages: require(path.join(__dirname, 'resources/assets/js/app/strings.json')),
-});
-
 mix.extend('vuePug', (webpackConfig, ...args) => {
   for (const rule of webpackConfig.module.rules) {
     if ('vue-loader' !== rule.loader) {
@@ -36,6 +32,11 @@ mix.extend('vuePug', (webpackConfig, ...args) => {
 });
 
 mix.extend('vueI18n', (webpackConfig, ...args) => {
+  const i18n = new VueI18n({
+    locale: 'ja',
+    messages: require(path.join(__dirname, 'resources/assets/js/app/strings.json')),
+  });
+
   for (const rule of webpackConfig.module.rules) {
     if ('vue-loader' !== rule.loader) {
       continue;
@@ -54,7 +55,14 @@ mix.js('resources/assets/js/app.js', 'public/js')
         '@': path.resolve(__dirname, 'resources/assets/js'),
       },
     },
+    plugins: [
+      new CircularDependencyPlugin({
+        exclude: /node_modules/,
+      }),
+    ],
   })
   .vuePug()
   .vueI18n()
-  .sass('resources/assets/sass/app.scss', 'public/css');
+  .sass('resources/assets/sass/app.scss', 'public/css', {
+    includePaths: ['node_modules', 'node_modules/bootstrap-honoka/scss'],
+  });

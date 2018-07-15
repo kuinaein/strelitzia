@@ -1,23 +1,26 @@
 <template lang="pug">
-include /components/mixin
+include /components/mixins
 
 .container
-  button.btn.btn-default(type="button" @click="create")
-    +bsIcon("plus")
+  button.btn.btn-secondary(type="button" @click="create")
+    +faIcon("plus")
     span &nbsp;追加
   table.table.table-bordered.table-striped
     thead
       tr
         th 操作
         th タイプ
-        th パス
         th 名称
+        th パス
     tbody
       tr(v-for="a of bsAccounts")
-        td: button.btn.btn-primary(type="button" @click="edit(a.id)"): +bsIcon("edit")
-        td(v-t="'enum.accountType.' + a.type")
+        td: button.btn.btn-primary(type="button" @click="edit(a.id)"): +faIcon("edit")
+        td(v-t="'enum.accountType.' + a.type"
+            :class="{success: AccountTitleType.ASSET === a.type || AccountTitleType.NET_ASSET === a.type, danger: AccountTitleType.LIABILITY === a.type}")
+        td: span(:style="'display:inline-block;padding-left: ' + (Math.max(0, a.level - 1) * 2) + 'ex'")
+          template(v-if="0 !== a.level") |-
+          template {{ a.name }}
         td {{ a.path }}
-        td {{ a.name }}
   modal(ref="createDlg")
     template(slot="title") 資産・負債科目の
       template(v-if="editing.bsAccount.id") 編集
@@ -29,8 +32,10 @@ include /components/mixin
         input.form-control(v-model="editing.bsAccount.name" required)
       .form-group
         label タイプ
-        select.form-control(v-model="editing.bsAccount.type" required)
-          option(v-for="t in Object.keys(targetTypes)"
+        div.form-control-static(v-if="editing.bsAccount.id"
+            v-t="'enum.accountType.' + editing.bsAccount.type")
+        select.form-control(v-else v-model="editing.bsAccount.type" required)
+          option(v-for="t of targetTypes"
               :value="t" v-t="'enum.accountType.' + t"
               :key="'editing-account-type-choice-' + t")
       .form-group
@@ -52,14 +57,13 @@ import axios from 'axios';
 import { csvContains } from '@/util/lang';
 import { mapConstants } from '@/util/vue-util';
 
-import { AccountTitleType } from '@/account/constants';
+import {
+  ACCOUNT_PATH_SEPARATOR,
+  AccountTitleType,
+  AccountTitleTypeDesc,
+  FinancialStatementType,
+} from '@/account/constants';
 import { AccountModule } from '@/account/AccountModule';
-
-const targetTypes = {
-  [AccountTitleType.ASSET]: true,
-  [AccountTitleType.LIABILITY]: true,
-  [AccountTitleType.NET_ASSET]: true,
-};
 
 export default {
   data () {
@@ -75,15 +79,25 @@ export default {
     };
   },
   computed: {
-    ...mapConstants({targetTypes}),
+    ...mapConstants({AccountTitleType}),
     ...mapState(['apiRoot']),
     ...AccountModule.mapState(['accountTitles', 'accountTitleMap']),
+    targetTypes () {
+      return Object.keys(AccountTitleTypeDesc).reduce((r, k) => {
+        if (AccountTitleTypeDesc[k].statements[FinancialStatementType.BALANCE_SHEET]) {
+          r[k] = k;
+        };
+        return r;
+      }, {});
+    },
     bsAccounts () {
-      return (this.accountTitles || []).filter(a => targetTypes[a.type]);
+      return (this.accountTitles || [])
+          .filter(a => AccountTitleTypeDesc[a.type].
+              statements[FinancialStatementType.BALANCE_SHEET]);
     },
     parentCandidates () {
       return this.bsAccounts
-        .filter(a => !csvContains(a.path, this.editing.bsAccount.path, ' / '));
+        .filter(a => !csvContains(a.path, this.editing.bsAccount.path, ACCOUNT_PATH_SEPARATOR));
     },
   },
   methods: {

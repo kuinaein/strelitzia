@@ -14,7 +14,7 @@ try {
   window.$ = window.jQuery = jQuery;
 
   // eslint-disable-next-line no-undef
-  require('bootstrap-sass');
+  require('bootstrap');
 } catch (e) {
   console.error(e);
 }

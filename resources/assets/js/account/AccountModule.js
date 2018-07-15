@@ -1,7 +1,7 @@
 import { createNamespacedHelpers } from 'vuex';
 import axios from 'axios';
 
-import { AccountTitleType } from '@/account/constants';
+import { ACCOUNT_PATH_SEPARATOR, AccountTitleTypeDesc } from '@/account/constants';
 
 const mutaionKey = {
   CACHE_ACCOUNT_TITLES: 'CACHE_ACCOUNT_TITLES',
@@ -9,15 +9,6 @@ const mutaionKey = {
 
 const actionKey = {
   LOAD_ALL: 'LOAD_ALL',
-};
-
-const typePos = {
-  [AccountTitleType.ASSET]: 0,
-  [AccountTitleType.LIABILITY]: 10,
-  [AccountTitleType.NET_ASSET]: 20,
-  [AccountTitleType.REVENUE]: 30,
-  [AccountTitleType.EXPENSE]: 40,
-  [AccountTitleType.OTHER]: 50,
 };
 
 export const AccountModule = {
@@ -56,11 +47,11 @@ export const AccountModule = {
             ++level;
             b = accountTitleMap[a.parentId];
             if (b.path) {
-              path = b.path + ' / ' + path;
+              path = b.path + ACCOUNT_PATH_SEPARATOR + path;
               level += b.level;
               break;
             } else {
-              path = b.name + ' / ' + path;
+              path = b.name + ACCOUNT_PATH_SEPARATOR + path;
             }
           }
           a.path = path;
@@ -69,7 +60,8 @@ export const AccountModule = {
 
         accountTitles.sort((o1, o2) => {
           if (o1.type !== o2.type) {
-            return typePos[o1.type] - typePos[o2.type];
+            return AccountTitleTypeDesc[o1.type].order -
+                AccountTitleTypeDesc[o2.type].order;
           }
           return o1.path === o2.path ? 0 : o1.path < o2.path ? -1 : 1;
         });
