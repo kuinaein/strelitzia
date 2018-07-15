@@ -1,8 +1,8 @@
 <template lang="pug">
 .modal.fade(tabindex="-1"): .modal-dialog: .modal-content
   .modal-header
+    h5.modal-title: slot(name="title")
     button.close(type="button" data-dismiss="modal") x
-    h4.modal-title: slot(name="title")
   .modal-body
     slot
 </template>

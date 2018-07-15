@@ -48,6 +48,8 @@ include /components/mixins
         label 開始残高
         input.form-control(v-model="editing.openingBalance" type="number" required)
       button.btn.btn-primary(type="button" @click="doSave") 保存
+      template &nbsp;
+      button.btn.btn-secondary(type="button" data-dismiss="modal") キャンセル
 </template>
 
 <script>
