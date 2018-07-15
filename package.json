@@ -23,6 +23,7 @@
         "jquery-slim": "^3.0.0",
         "laravel-mix": "^2.1.11",
         "lodash": "^4.17.4",
+        "moment": "^2.22.2",
         "pug-html-loader": "^1.1.5",
         "vue": "^2.5.7",
         "vue-i18n": "^8.0.0",

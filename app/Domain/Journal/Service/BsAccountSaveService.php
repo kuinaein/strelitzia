@@ -11,6 +11,7 @@ use App\Domain\Account\Dto\BsAccount;
 use App\Domain\Account\Dto\SystemAccountTitleKey;
 use App\Domain\Journal\Dao\AccountingJournalDao;
 use App\Domain\Journal\Dto\AccountingJournal;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -48,6 +49,7 @@ class BsAccountSaveService {
       $a = $this->dao->save($bsAccount);
       $isAsset = $bsAccount->type === AccountTitleType::ASSET;
       $j = new AccountingJournal();
+      $j->journalDate = Carbon::createFromDate(1, 1, 1);
       $j->debitAccountId = $isAsset ? $a->id : $op->id;
       $j->creditAccountId = $isAsset ? $op->id : $a->id;
       $j->amount = $openingBalance;

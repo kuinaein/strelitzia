@@ -17,35 +17,41 @@ export const FinancialStatementType = {
 export const AccountTitleTypeDesc = {
   [AccountTitleType.ASSET]: {
     order: 10,
+    isDebitSide: true,
     statements: {
       [FinancialStatementType.BALANCE_SHEET]: true,
     },
   },
   [AccountTitleType.LIABILITY]: {
     order: 20,
+    isDebitSide: false,
     statements: {
       [FinancialStatementType.BALANCE_SHEET]: true,
     },
   },
   [AccountTitleType.NET_ASSET]: {
     order: 30,
+    isDebitSide: false,
     statements: {
       [FinancialStatementType.BALANCE_SHEET]: true,
     },
   },
   [AccountTitleType.REVENUE]: {
     order: 40,
+    isDebitSide: false,
     statements: {
       [FinancialStatementType.PROFIT_AND_LOSS_STATEMENT]: true,
     },
   },
   [AccountTitleType.EXPENSE]: {
     order: 50,
+    isDebitSide: true,
     statements: {
       [FinancialStatementType.PROFIT_AND_LOSS_STATEMENT]: true,
     },
   },
   [AccountTitleType.OTHER]: {
+    isDebitSide: false,
     order: 60,
     statements: {},
   },

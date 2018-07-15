@@ -13,17 +13,18 @@ div
 </template>
 
 <script>
+import { extendVue } from '@/core/vue';
 import { AccountModule } from '@/account/AccountModule';
 
-export default {
+export default extendVue({
   computed: AccountModule.mapState(['accountTitles']),
-  mounted () {
-    this.loadAllAccountData().catch(err => {
-      alert('エラー！: ' + err);
-    });
-  },
   methods: AccountModule.mapActions({
     loadAllAccountData: AccountModule.actionKey.LOAD_ALL,
+    streReload() {
+      this.loadAllAccountData().catch(err => {
+        alert('エラー！: ' + err);
+      });
+    },
   }),
-};
+});
 </script>

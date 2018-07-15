@@ -9,6 +9,7 @@ use App\Domain\Account\Dto\AccountTitle;
 use App\Domain\Account\Dto\AccountTitleType;
 use App\Domain\Journal\Dto\AccountingJournal;
 use App\Domain\Journal\Model\AccountingJournalModel;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -30,6 +31,20 @@ class AccountingJournalDao {
   $this->repo->where(['debit_account_id' => $debit->Id, 'credit_account_id' => $credit->Id])
     ->firstOrFail()
   );
+  }
+
+  /**
+   * @param int    $accountId
+   * @param Carbon $startInclusive
+   * @param Carbon $endExclusive
+   * @return AccountingJournal[]
+   */
+  public function listByAccountIdAndPeriod(int $accountId, Carbon $startInclusive, Carbon $endExclusive): Collection {
+    return $this->listOneSide($accountId, $startInclusive, $endExclusive, 'debit')
+    ->concat($this->listOneSide($accountId, $startInclusive, $endExclusive, 'credit'))
+    ->map(function ($m) {
+      return new AccountingJournal($m);
+    });
   }
 
   public function save(AccountingJournal $dto): AccountingJournal {
@@ -69,6 +84,13 @@ class AccountingJournalDao {
   }
     }
     return $result;
+  }
+
+  private function listOneSide(int $accountId, Carbon $startInclusive, Carbon $endExclusive, string $side): Collection {
+    return $this->repo->where([$side . '_account_id' => $accountId])
+    ->where('journal_date', '>=', $startInclusive)
+    ->where('journal_date', '<', $endExclusive)
+    ->get();
   }
 
   private function sumOneSide(array $accountTypes, string $side): Collection {

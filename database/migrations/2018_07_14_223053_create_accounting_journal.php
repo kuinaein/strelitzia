@@ -13,6 +13,7 @@ class CreateAccountingJournal extends Migration {
   public function up(): void {
     Schema::create('accounting_journal', function (Blueprint $table): void {
       $table->increments('id');
+      $table->date('journal_date');
       $table->integer('debit_account_id');
       $table->foreign('debit_account_id')->references('id')->on('account_title');
       $table->index('debit_account_id');

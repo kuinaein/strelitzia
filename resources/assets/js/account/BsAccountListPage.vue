@@ -15,7 +15,9 @@ include /components/mixins
         th パス
     tbody
       tr(v-for="a of bsAccounts")
-        td: button.btn.btn-primary(type="button" @click="edit(a.id)"): +faIcon("edit")
+        td: button.btn.btn-primary(type="button" @click="edit(a.id)")
+          +faIcon("edit")
+          template 編集
         td(v-t="'enum.accountType.' + a.type" :class="accountTypeClass(a.type)")
         th: span(:style="'display:inline-block;padding-left: ' + (Math.max(0, a.level - 1) * 2) + 'ex'")
           template(v-if="0 !== a.level") |-
@@ -53,12 +55,12 @@ include /components/mixins
 </template>
 
 <script>
-import { mapState } from 'vuex';
 import axios from 'axios';
 
 import { csvContains } from '@/util/lang';
 import { mapConstants } from '@/util/vue-util';
 
+import { extendVue } from '@/core/vue';
 import {
   ACCOUNT_PATH_SEPARATOR,
   AccountTitleType,
@@ -67,7 +69,7 @@ import {
 } from '@/account/constants';
 import { AccountModule } from '@/account/AccountModule';
 
-export default {
+export default extendVue({
   data () {
     return {
       editing: {
@@ -82,7 +84,6 @@ export default {
   },
   computed: {
     ...mapConstants({AccountTitleType}),
-    ...mapState(['apiRoot']),
     ...AccountModule.mapState(['accountTitles', 'accountTitleMap']),
     targetTypes () {
       return Object.keys(AccountTitleTypeDesc).reduce((r, k) => {
@@ -142,5 +143,5 @@ export default {
       });
     },
   },
-};
+});
 </script>

@@ -11,22 +11,33 @@ use App\Domain\Journal\Dao\AccountingJournalDao;
 use App\Domain\Journal\Service\TrialBalanceBuildService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
-class JournalApiController extends Controller {
-  private $dao;
+class LedgerApiController extends Controller {
+  private $journalDao;
 
   private $accountDao;
 
   private $trialBalanceBuildService;
 
   public function __construct(
-  AccountingJournalDao $dao,
+  AccountingJournalDao $journalDao,
   AccountTitleDao $accountDao,
   TrialBalanceBuildService $trialBalanceBuildService
   ) {
-    $this->dao = $dao;
+    $this->journalDao = $journalDao;
     $this->accountDao = $accountDao;
     $this->trialBalanceBuildService = $trialBalanceBuildService;
+  }
+
+  public function index(Request $request, int $accountId, string $month): array {
+    $cMonth = Carbon::parse($month);
+    $journals = $this->journalDao->listByAccountIdAndPeriod(
+  $accountId,
+  $cMonth->startOfMonth(),
+  $cMonth->copy()->endOfMonth()
+  );
+    return ['data' => $journals, 'message' => 'OK'];
   }
 
   public function showTrialBalance(Request $request): array {
@@ -44,7 +55,7 @@ class JournalApiController extends Controller {
   );
     return ['message' => 'OK',
       'data' => $bs->type === AccountTitleType::ASSET
-  ? $this->dao->findOrFailByAccount($bs, $op)
-  : $this->dao->findOrFailByAccount($op, $bs), ];
+  ? $this->journalDao->findOrFailByAccount($bs, $op)
+  : $this->journalDao->findOrFailByAccount($op, $bs), ];
   }
 }
