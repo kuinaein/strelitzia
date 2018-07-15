@@ -26,13 +26,28 @@ if ('development' === process.env.NODE_ENV) {
   }, err => {
     console.error(err);
     console.error(err.response);
-    if (err.response && err.response.data) {
-      throw new Error(JSON.stringify(err.response.data));
-    } else {
-      throw err;
-    }
+    throw err;
   });
 }
+
+window.axios.interceptors.response.use(res => res, err => {
+  if (!err.response || !err.response.data) {
+    throw err;
+  }
+  const data = err.response.data;
+  if (422 === err.response.status && data.errors) {
+    // バリデーションエラー
+    let buf = '';
+    for (const field in data.errors) {
+      buf += `\n* ${field}`;
+      for (const f of data.errors[field]) {
+        buf += `\n  * ${f}`;
+      }
+    }
+    throw new Error(buf);
+  }
+  throw new Error(JSON.stringify(data));
+});
 
 window.Vue = Vue;
 Vue.use(VueI18n);
