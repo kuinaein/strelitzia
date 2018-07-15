@@ -2,7 +2,7 @@
 include /components/mixins
 
 .container
-  h1 資産・負債科目マスタ
+  h1 収益・費用科目マスタ
   button.btn.btn-secondary(type="button" @click="create")
     +faIcon("plus")
     span &nbsp;追加
@@ -14,7 +14,7 @@ include /components/mixins
         th 名称
         th パス
     tbody
-      tr(v-for="a of bsAccounts")
+      tr(v-for="a of plAccounts")
         td: button.btn.btn-primary(type="button" @click="edit(a.id)"): +faIcon("edit")
         td(v-t="'enum.accountType.' + a.type" :class="accountTypeClass(a.type)")
         th: span(:style="'display:inline-block;padding-left: ' + (Math.max(0, a.level - 1) * 2) + 'ex'")
@@ -22,31 +22,27 @@ include /components/mixins
           template {{ a.name }}
         td {{ a.path }}
   modal(ref="createDlg")
-    template(slot="title") 資産・負債科目の
-      template(v-if="editing.bsAccount.id") 編集
+    template(slot="title") 収益・費用科目の
+      template(v-if="editing.plAccount.id") 編集
       template(v-else) 追加
-    template(v-if="null === editing.openingBalance") ロード中...
-    form(v-else)
+    form
       .form-group
         label 科目名
-        input.form-control(v-model="editing.bsAccount.name" required)
+        input.form-control(v-model="editing.plAccount.name" required)
       .form-group
         label タイプ
-        div.form-control-static(v-if="editing.bsAccount.id"
-            v-t="'enum.accountType.' + editing.bsAccount.type")
-        select.form-control(v-else v-model="editing.bsAccount.type" required)
+        div.form-control-static(v-if="editing.plAccount.id"
+            v-t="'enum.accountType.' + editing.plAccount.type")
+        select.form-control(v-else v-model="editing.plAccount.type" required)
           option(v-for="t of targetTypes"
               :value="t" v-t="'enum.accountType.' + t"
               :key="'editing-account-type-choice-' + t")
       .form-group
         label 親科目
-        select.form-control(v-model="editing.bsAccount.parentId")
+        select.form-control(v-model="editing.plAccount.parentId")
           option(value="0") （なし）
           option(v-for="a in parentCandidates" :value="a.id"
               :key="'editing-account-parent-choice-' + a.id") {{ a.name }}
-      .form-group
-        label 開始残高
-        input.form-control(v-model="editing.openingBalance" type="number" required)
       button.btn.btn-primary(type="button" @click="doSave") 保存
       template &nbsp;
       button.btn.btn-secondary(type="button" data-dismiss="modal") キャンセル
@@ -71,12 +67,11 @@ export default {
   data () {
     return {
       editing: {
-        bsAccount: {
+        plAccount: {
           name: '',
-          type: AccountTitleType.ASSET,
+          type: AccountTitleType.REVENUE,
           parentId: 0,
         },
-        openingBalance: 0,
       },
     };
   },
@@ -86,30 +81,29 @@ export default {
     ...AccountModule.mapState(['accountTitles', 'accountTitleMap']),
     targetTypes () {
       return Object.keys(AccountTitleTypeDesc).reduce((r, k) => {
-        if (AccountTitleTypeDesc[k].statements[FinancialStatementType.BALANCE_SHEET]) {
+        if (AccountTitleTypeDesc[k].statements[FinancialStatementType.PROFIT_AND_LOSS_STATEMENT]) {
           r[k] = k;
         }
         return r;
       }, {});
     },
-    bsAccounts () {
+    plAccounts () {
       return (this.accountTitles || [])
         .filter(a => AccountTitleTypeDesc[a.type].
-          statements[FinancialStatementType.BALANCE_SHEET]);
+          statements[FinancialStatementType.PROFIT_AND_LOSS_STATEMENT]);
     },
     parentCandidates () {
-      return this.bsAccounts
-        .filter(a => !csvContains(a.path, this.editing.bsAccount.path, ACCOUNT_PATH_SEPARATOR));
+      return this.plAccounts
+        .filter(a => !csvContains(a.path, this.editing.plAccount.path, ACCOUNT_PATH_SEPARATOR));
     },
   },
   methods: {
     ...AccountModule.mapActions([AccountModule.actionKey.LOAD_ALL]),
     accountTypeClass (type) {
       switch (type) {
-      case AccountTitleType.ASSET:
-      case AccountTitleType.NET_ASSET:
+      case AccountTitleType.REVENUE:
         return 'table-success';
-      case AccountTitleType.LIABILITY:
+      case AccountTitleType.EXPENSE:
         return 'table-danger';
       }
     },
@@ -119,26 +113,20 @@ export default {
     },
     edit (id) {
       this.editing = {
-        bsAccount: Object.assign({}, this.accountTitleMap[id]),
-        openingBalance: null,
+        plAccount: Object.assign({}, this.accountTitleMap[id]),
       };
       this.$refs.createDlg.open();
-      axios.get(`${this.apiRoot}/journal/opening/${this.editing.bsAccount.id}`).then(res => {
-        this.editing.openingBalance = res.data.data.amount;
-      }).catch(() => {
-        alert('開始残高を取得できません');
-      });
     },
     doSave () {
-      const promise = this.editing.bsAccount.id
-        ? axios.put(`${this.apiRoot}/account/bs-account/${this.editing.bsAccount.id}`, this.editing)
-        : axios.post(`${this.apiRoot}/account/bs-account`, this.editing);
+      const promise = this.editing.plAccount.id
+        ? axios.put(`${this.apiRoot}/account/pl-account/${this.editing.plAccount.id}`, this.editing)
+        : axios.post(`${this.apiRoot}/account/pl-account`, this.editing);
       promise.then(() => {
-        alert(`勘定科目「${this.editing.bsAccount.name}」を保存しました`);
+        alert(`勘定科目「${this.editing.plAccount.name}」を保存しました`);
         this[AccountModule.actionKey.LOAD_ALL]();
         this.$refs.createDlg.close();
       }).catch(err => {
-        alert(`勘定科目「${this.editing.bsAccount.name}」の保存に失敗しました:  ${err}`);
+        alert(`勘定科目「${this.editing.plAccount.name}」の保存に失敗しました:  ${err}`);
       });
     },
   },

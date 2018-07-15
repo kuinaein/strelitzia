@@ -7,6 +7,7 @@ div
       span.navbar-toggler-icon
     #stre-navbar.collapse.navbar-collapse: ul.navbar-nav.mr-auto
       li.nav-item: router-link.nav-link(to="/bs-account") 資産・負債科目
+      li.nav-item: router-link.nav-link(to="/pl-account") 収益・費用科目
   .container(v-if="null === accountTitles") ロード中...
   router-view(v-else)
 </template>

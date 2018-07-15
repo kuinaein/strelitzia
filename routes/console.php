@@ -13,6 +13,18 @@ declare(strict_types=1);
 |
 */
 
+Artisan::command('stre:createdb', function (): void {
+  $user = config('database.connections.pgsql.username');
+  $pass = config('database.connections.pgsql.password');
+  $db = config('database.connections.pgsql.database');
+  // sudo -u postgres initdb -E UTF8 --no-locale -D '/var/lib/postgres/data'
+  $psqlCmd = 'psql -U postgres -c ';
+  passthru($psqlCmd . "\"CREATE USER ${user} WITH ENCRYPTED PASSWORD '${pass}'\"");
+  passthru($psqlCmd . "\"CREATE DATABASE ${db} WITH OWNER ${user} ENCODING 'UTF8'" .
+  " LC_COLLATE 'C' LC_CTYPE 'C' TEMPLATE template0\"");
+  Artisan::call('migrate:install');
+})->describe('データベース初期化');
+
 Artisan::command('stre:cs', function (): void {
   @unlink(base_path('.php_cs.cache'));
   passthru(base_path('vendor/bin/php-cs-fixer') . ' fix');
@@ -27,15 +39,3 @@ Artisan::command('stre:dev', function (): void {
   sleep(1);
   passthru('xdg-open ' . config('app.url'));
 })->describe('開発環境として起動');
-
-Artisan::command('stre:createdb', function (): void {
-  $user = config('database.connections.pgsql.username');
-  $pass = config('database.connections.pgsql.password');
-  $db = config('database.connections.pgsql.database');
-  // sudo -u postgres initdb -E UTF8 --no-locale -D '/var/lib/postgres/data'
-  $psqlCmd = 'psql -U postgres -c ';
-  passthru($psqlCmd . "\"CREATE USER ${user} WITH ENCRYPTED PASSWORD '${pass}'\"");
-  passthru($psqlCmd . "\"CREATE DATABASE ${db} WITH OWNER ${user} ENCODING 'UTF8'" .
-  " LC_COLLATE 'C' LC_CTYPE 'C' TEMPLATE template0\"");
-  Artisan::call('migrate:install');
-})->describe('データベース初期化');
