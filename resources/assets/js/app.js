@@ -5,12 +5,12 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-import './bootstrap';
+import '@/bootstrap';
 
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 
-import strings from '@/app/strings.json';
+import strings from '@/app/strings';
 
 import { router } from '@/app/router';
 import { store } from '@/app/vuex';

@@ -8,6 +8,7 @@ use App\Domain\Account\Dao\AccountTitleDao;
 use App\Domain\Account\Dto\AccountTitleType;
 use App\Domain\Account\Dto\SystemAccountTitleKey;
 use App\Domain\Journal\Dao\AccountingJournalDao;
+use App\Domain\Journal\Service\TrialBalanceBuildService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -16,9 +17,24 @@ class JournalApiController extends Controller {
 
   private $accountDao;
 
-  public function __construct(AccountingJournalDao $dao, AccountTitleDao $accountDao) {
+  private $trialBalanceBuildService;
+
+  public function __construct(
+  AccountingJournalDao $dao,
+  AccountTitleDao $accountDao,
+  TrialBalanceBuildService $trialBalanceBuildService
+  ) {
     $this->dao = $dao;
     $this->accountDao = $accountDao;
+    $this->trialBalanceBuildService = $trialBalanceBuildService;
+  }
+
+  public function showTrialBalance(Request $request): array {
+    $accountTypes = array_map(function ($t) {
+      return new AccountTitleType($t);
+    }, $request->accountTypes);
+    $r = $this->trialBalanceBuildService->build($accountTypes);
+    return ['data' => $r, 'message' => 'OK'];
   }
 
   public function showOpeningBalance(Request $request, int $bsAccountId): array {

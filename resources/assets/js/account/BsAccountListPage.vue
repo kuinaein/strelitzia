@@ -15,8 +15,7 @@ include /components/mixins
     tbody
       tr(v-for="a of bsAccounts")
         td: button.btn.btn-primary(type="button" @click="edit(a.id)"): +faIcon("edit")
-        td(v-t="'enum.accountType.' + a.type"
-            :class="{success: AccountTitleType.ASSET === a.type || AccountTitleType.NET_ASSET === a.type, danger: AccountTitleType.LIABILITY === a.type}")
+        td(v-t="'enum.accountType.' + a.type" :class="accountTypeClass(a.type)")
         td: span(:style="'display:inline-block;padding-left: ' + (Math.max(0, a.level - 1) * 2) + 'ex'")
           template(v-if="0 !== a.level") |-
           template {{ a.name }}
@@ -88,14 +87,14 @@ export default {
       return Object.keys(AccountTitleTypeDesc).reduce((r, k) => {
         if (AccountTitleTypeDesc[k].statements[FinancialStatementType.BALANCE_SHEET]) {
           r[k] = k;
-        };
+        }
         return r;
       }, {});
     },
     bsAccounts () {
       return (this.accountTitles || [])
-          .filter(a => AccountTitleTypeDesc[a.type].
-              statements[FinancialStatementType.BALANCE_SHEET]);
+        .filter(a => AccountTitleTypeDesc[a.type].
+          statements[FinancialStatementType.BALANCE_SHEET]);
     },
     parentCandidates () {
       return this.bsAccounts
@@ -104,6 +103,15 @@ export default {
   },
   methods: {
     ...AccountModule.mapActions([AccountModule.actionKey.LOAD_ALL]),
+    accountTypeClass (type) {
+      switch (type) {
+      case AccountTitleType.ASSET:
+      case AccountTitleType.NET_ASSET:
+        return 'table-success';
+      case AccountTitleType.LIABILITY:
+        return 'table-danger';
+      }
+    },
     create () {
       this.editing = this.$options.data().editing;
       this.$refs.createDlg.open();

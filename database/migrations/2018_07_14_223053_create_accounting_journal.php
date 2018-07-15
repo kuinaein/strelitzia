@@ -15,8 +15,10 @@ class CreateAccountingJournal extends Migration {
       $table->increments('id');
       $table->integer('debit_account_id');
       $table->foreign('debit_account_id')->references('id')->on('account_title');
+      $table->index('debit_account_id');
       $table->integer('credit_account_id');
       $table->foreign('credit_account_id')->references('id')->on('account_title');
+      $table->index('credit_account_id');
       $table->integer('amount');
       $table->timestamps();
     });

@@ -32,6 +32,7 @@ export const AccountModule = {
       return axios.get(rootState.apiRoot + '/account').then(res => {
         const accountTitles = res.data.data;
         const accountTitleMap = {};
+        // order, path, level, children はフロントエンド側で保管
         for (const a of accountTitles) {
           accountTitleMap[a.id] = a;
           a.children = [];
@@ -65,6 +66,9 @@ export const AccountModule = {
           }
           return o1.path === o2.path ? 0 : o1.path < o2.path ? -1 : 1;
         });
+        for (let i = 0; i < accountTitles.length; ++i) {
+          accountTitles[i].order = i;
+        }
         commit(mutaionKey.CACHE_ACCOUNT_TITLES, {accountTitles, accountTitleMap});
       });
     },

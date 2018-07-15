@@ -1006,6 +1006,10 @@ bootstrap-honoka@^4.0.0:
     jquery ">=1.9.1"
     popper.js "^1.14.3"
 
+bootstrap-jquery-slim@^4.1.1-1:
+  version "4.1.1-1"
+  resolved "https://registry.yarnpkg.com/bootstrap-jquery-slim/-/bootstrap-jquery-slim-4.1.1-1.tgz#bddd48c89c098acb9b3282e5b39f633b306dc827"
+
 bootstrap@4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.0.0.tgz#ceb03842c145fcc1b9b4e15da2a05656ba68469a"
@@ -4276,7 +4280,11 @@ isurl@^1.0.0-alpha5:
     has-to-string-tag-x "^1.2.0"
     is-object "^1.0.1"
 
-jquery@>=1.9.1, jquery@^3.2:
+jquery-slim@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/jquery-slim/-/jquery-slim-3.0.0.tgz#87ab2fa10501798e93124a4b5eb953c85379707e"
+
+jquery@>=1.9.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
 

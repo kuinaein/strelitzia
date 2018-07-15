@@ -21,5 +21,6 @@ Route::group(['prefix' => 'account', 'namespace' => 'Account'], function (Router
 });
 
 Route::group(['prefix' => 'journal', 'namespace' => 'Journal'], function (Router $router): void {
+  $router->post('trial-balance', 'JournalApiController@showTrialBalance');
   $router->get('opening/{bsAccountId}', 'JournalApiController@showOpeningBalance');
 });

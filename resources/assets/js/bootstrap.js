@@ -1,8 +1,8 @@
-import _ from 'lodash';
-import jQuery from 'jquery';
+// import _ from 'lodash';
+import jQuery from 'jquery-slim';
 import axios from 'axios';
 
-window._ = _;
+// window._ = _;
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -14,7 +14,7 @@ try {
   window.$ = window.jQuery = jQuery;
 
   // eslint-disable-next-line no-undef
-  require('bootstrap');
+  require('bootstrap-jquery-slim');
 } catch (e) {
   console.error(e);
 }

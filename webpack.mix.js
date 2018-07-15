@@ -53,6 +53,7 @@ mix.js('resources/assets/js/app.js', 'public/js')
       extensions: ['.js', '.json', '.vue'],
       alias: {
         '@': path.resolve(__dirname, 'resources/assets/js'),
+        'vue$': 'vue/dist/vue.runtime.esm.js',
       },
     },
     plugins: [
@@ -65,4 +66,13 @@ mix.js('resources/assets/js/app.js', 'public/js')
   .vueI18n()
   .sass('resources/assets/sass/app.scss', 'public/css', {
     includePaths: ['node_modules', 'node_modules/bootstrap-honoka/scss'],
-  });
+  })
+  .options({
+    processCssUrls: false,
+  })
+  .copyDirectory('node_modules/font-awesome-scss/fonts', 'public/fonts');
+
+
+if ('development' === process.env.NODE_ENV) {
+  mix.sourceMaps();
+}
