@@ -2,26 +2,30 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Account\Vo;
+namespace App\Core;
 
-use App\Domain\Account\Model\AccountTitleModel;
 use App\Exceptions\BadVoSourceException;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Database\Eloquent\Model;
 
-class BsAccount implements AccountTitle, Arrayable, \JsonSerializable {
+abstract class StreDto implements Arrayable, \JsonSerializable {
+  protected static $modelClass;
+
   /**
-   * @var AccountTitleModel
+   * @var
    */
   private $model;
 
   /**
-   * @param AccounTitleModel|array $src
+   * @param null|array|Model $src
    */
-  public function __construct($src) {
-    if ($src instanceof AccountTitleModel) {
+  public function __construct($src = null) {
+    if (!isset($src)) {
+      $this->model = new static::$modelClass();
+    } elseif ($src instanceof static::$modelClass) {
       $this->model = $src;
     } elseif (is_array($src)) {
-      $this->model = new AccountTitleModel();
+      $this->model = new static::$modelClass();
       $ar = [];
 
       foreach ($src as $k => $v) {
@@ -43,25 +47,29 @@ class BsAccount implements AccountTitle, Arrayable, \JsonSerializable {
     }
   }
 
-  public function __get($name) {
+  public function __get(string $name) {
     return $this->unwrap()->{snake_case($name)};
   }
 
-  public function __set($name, $value) {
+  public function __set(string $name, $value) {
     return $this->unwrap()->{snake_case($name)} = $value;
   }
 
-  public function unwrap(): AccountTitleModel {
+  public function unwrap(): Model {
     return $this->model;
   }
 
   /**
-   * @param BsAccount $another
+   * @param self $another
    * @return $this
    */
   public function fill(self $another): self {
-    $this->unwrap()->fill($another->toArray());
+    $this->unwrap()->fill($another->unwrap()->toArray());
     return $this;
+  }
+
+  public function jsonSerialize(): array {
+    return $this->toArray();
   }
 
   public function toArray(): array {
@@ -71,9 +79,5 @@ class BsAccount implements AccountTitle, Arrayable, \JsonSerializable {
       $result[camel_case($k)] = $v;
     }
     return $result;
-  }
-
-  public function jsonSerialize(): array {
-    return $this->toArray();
   }
 }

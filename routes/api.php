@@ -19,3 +19,7 @@ Route::group(['prefix' => 'account', 'namespace' => 'Account'], function (Router
   $router->resource('/', 'AccountApiController', ['only' => ['index']]);
   $router->resource('bs-account', 'BsAccountApiController', ['only' => ['store', 'update']]);
 });
+
+Route::group(['prefix' => 'journal', 'namespace' => 'Journal'], function (Router $router): void {
+  $router->get('opening/{bsAccountId}', 'JournalApiController@showOpeningBalance');
+});

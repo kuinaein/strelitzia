@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Account;
 
 use App\Domain\Account\Dao\BsAccountDao;
-use App\Domain\Account\Service\BsAccountSaveService;
-use App\Domain\Account\Vo\BsAccount;
+use App\Domain\Account\Dto\BsAccount;
+use App\Domain\Journal\Service\BsAccountSaveService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -26,8 +26,8 @@ class BsAccountApiController extends Controller {
    * @param \Illuminate\Http\Request $request
    */
   public function store(Request $request): array {
-    $a = new BsAccount($request->all());
-    $this->saveService->create($a);
+    $a = new BsAccount($request->bsAccount);
+    $this->saveService->create($a, (int) $request->openingBalance);
     return ['messsage' => 'OK'];
   }
 
@@ -39,8 +39,8 @@ class BsAccountApiController extends Controller {
    * @return \Illuminate\Http\Response
    */
   public function update(Request $request, int $id): array {
-    $a = new BsAccount($request->all());
-    $this->saveService->update($a);
+    $a = new BsAccount($request->bsAccount);
+    $this->saveService->update($a, (int) $request->openingBalance);
     return ['messsage' => 'OK'];
   }
 

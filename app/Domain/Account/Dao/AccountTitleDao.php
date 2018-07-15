@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Domain\Account\Dao;
 
+use App\Domain\Account\Dto\AccountTitle;
+use App\Domain\Account\Dto\SystemAccountTitleKey;
 use App\Domain\Account\Model\AccountTitleModel;
-use App\Domain\Account\Vo\AccountTitle;
-use App\Domain\Account\Vo\BsAccount;
 use Illuminate\Support\Collection;
 
 class AccountTitleDao {
@@ -24,11 +24,15 @@ class AccountTitleDao {
    */
   public function all(): Collection {
     return $this->repo->all()->map(function ($m) {
-      return new BsAccount($m);
+      return new AccountTitle($m);
     });
   }
 
   public function findOrFail(int $id): AccountTitle {
-    return new BsAccount($this->repo->findOrFail($id));
+    return new AccountTitle($this->repo->findOrFail($id));
+  }
+
+  public function findOrFailBySystemKey(SystemAccountTitleKey $key): AccountTitle {
+    return new AccountTitle($this->repo->where('system_key', $key)->firstOrFail());
   }
 }
