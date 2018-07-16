@@ -2,14 +2,14 @@ import { mapState } from 'vuex';
 
 const BaseVue = {
   computed: mapState(['apiRoot']),
+  watch: { '$route': '__routeChangeCallBack' },
   mounted () {
-    this.streReload && this.streReload();
-  },
-  beforeRouteUpdate (to, from, next) {
-    this.streReload && this.streReload();
-    next();
+    this.streInit && this.streInit();
   },
   methods: {
+    __routeChangeCallBack () {
+      this.streInit && this.streInit();
+    },
     formatCurrency (n) {
       return n.toLocaleString('ja-JP', {style: 'currency', currency: 'JPY'});
     },

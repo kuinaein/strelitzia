@@ -24,15 +24,21 @@ include /components/mixins
     p(v-if="0 === journals.length") （記帳されたデータがありません）
     table.table.table-striped.table-bordered(v-else)
       thead: tr
+        th 操作
+        th ID
         th 日付
         th 相手科目
         th 増加
         th 減少
         th 残高
       tbody: tr(v-for="j of journals" :key="'journal-' + j.id")
+        td: button.btn.btn-warning(type="button" @click="editEntry(j)")
+          +faIcon("edit")
+          template 修正
+        td {{ j.id }}
         td {{ j.journalDate }}
         th {{ accountTitleMap[j.debitAccountId === parseInt(accountId) ? j.creditAccountId : j.debitAccountId].name }}
-        template(v-if="isDebitSide && j.debitAccountId === accountId")
+        template(v-if="isDebitSide === (j.debitAccountId === parseInt(accountId))")
           td.text-right {{ formatCurrency(j.amount) }}
           td
         template(v-else)
@@ -41,6 +47,7 @@ include /components/mixins
         td.text-right {{ formatCurrency(j.balance) }}
   modal(ref="entryDlg")
     template(slot="title") 記帳
+      template(v-if="null !== editingEntry.id") 修正
     form
       .form-group.row
         label(class=entryLabelClass) 日付
@@ -56,7 +63,9 @@ include /components/mixins
           select.form-control(v-model="editingEntry.anotherAccountId" required)
             option(v-for="a of accountTitles"
                 v-if="'' === a.systemKey && a.id !== parseInt(accountId)"
-                :value="a.id" :key="'ledger-another-account-' + a.id") {{a.name}}
+                :value="a.id" :key="'ledger-another-account-' + a.id") [
+              span(v-t="'enum.accountType.' + accountTitleMap[a.id].type")
+              template ]{{ a.name }}
       .form-group.row
         label(class=entryLabelClass) 金額
         div(class=entryControlClass)
@@ -79,6 +88,7 @@ export default extendVue({
     return {
       journals: null,
       editingEntry: {
+        id: null,
         journalDate: moment().format('YYYY-MM-DD'),
         anotherAccountId: null,
         amount: '',
@@ -99,7 +109,7 @@ export default extendVue({
     },
   },
   methods: {
-    streReload () {
+    streInit () {
       Object.assign(this, this.$options.data());
       axios.get(`${this.apiRoot}/journal/ledger/${this.accountId}/${this.month}`).then(res => {
         const data = res.data.data;
@@ -130,23 +140,41 @@ export default extendVue({
     },
     doMakeEntry () {
       const postData = {
+        id: this.editingEntry.id || undefined,
         journalDate: this.editingEntry.journalDate,
-        amount: this.editingEntry.amount,
+        amount: Math.abs(this.editingEntry.amount),
       };
-      if (this.isDebitSide ===  (0 < this.editingEntry.amount)) {
-        postData.debitAccountId = this.accountId;
-        postData.creditAccountId = this.editingEntry.anotherAccountId;
-      } else {
+      const anotherAccountType =
+          this.accountTitleMap[this.editingEntry.anotherAccountId].type;
+      const isAnotherDebitSide = AccountTitleTypeDesc[anotherAccountType].isDebitSide;
+
+      if (isAnotherDebitSide ===  (0 < this.editingEntry.amount)) {
         postData.debitAccountId = this.editingEntry.anotherAccountId;
         postData.creditAccountId = this.accountId;
+      } else {
+        postData.debitAccountId = this.accountId;
+        postData.creditAccountId = this.editingEntry.anotherAccountId;
       }
-      axios.post(`${this.apiRoot}/journal/ledger`, postData).then(() => {
+      const promise = this.editingEntry.id
+        ? axios.put(`${this.apiRoot}/journal/ledger/${this.accountId}/${postData.id}`, postData)
+        : axios.post(`${this.apiRoot}/journal/ledger/${this.accountId}`, postData);
+      promise.then(() => {
         alert('保存しました');
         this.$refs.entryDlg.close();
-        this.streReload();
+        this.streInit();
       }).catch(err => {
         alert('保存に失敗しました: ' + err);
       });
+    },
+    editEntry (journal) {
+      this.editingEntry = Object.assign({}, journal);
+      console.log(journal);
+      if (journal.debitAccountId === parseInt(this.accountId)) {
+        this.editingEntry.anotherAccountId = journal.creditAccountId;
+      } else {
+        this.editingEntry.anotherAccountId = journal.debitAccountId;
+      }
+      this.$refs.entryDlg.open();
     },
   },
 });

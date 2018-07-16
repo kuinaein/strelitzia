@@ -11,5 +11,7 @@ return [
   'attributes' => [
     'name' => '名称',
     'openingBalance' => '開始残高',
+    'debitAccountId' => '借方科目',
+    'creditAccountId' => '貸方科目',
   ],
 ];

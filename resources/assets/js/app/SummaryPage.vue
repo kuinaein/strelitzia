@@ -43,7 +43,7 @@ export default extendVue({
     },
   },
   methods: {
-    streReload () {
+    streInit () {
       axios.post(this.apiRoot + '/journal/trial-balance', {
         accountTypes: [AccountTitleType.ASSET, AccountTitleType.LIABILITY, AccountTitleType.NET_ASSET]
       }).then(res => {

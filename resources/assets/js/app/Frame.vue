@@ -20,7 +20,7 @@ export default extendVue({
   computed: AccountModule.mapState(['accountTitles']),
   methods: AccountModule.mapActions({
     loadAllAccountData: AccountModule.actionKey.LOAD_ALL,
-    streReload() {
+    streInit() {
       this.loadAllAccountData().catch(err => {
         alert('エラー！: ' + err);
       });

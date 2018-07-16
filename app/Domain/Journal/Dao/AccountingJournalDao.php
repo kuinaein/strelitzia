@@ -26,6 +26,12 @@ class AccountingJournalDao {
     $this->accountDao = $accountDao;
   }
 
+  public function findOrFail(int $id): AccountingJournal {
+    return new AccountingJournal(
+  $this->repo->findOrFail($id)
+  );
+  }
+
   public function findOrFailByAccount(AccountTitle $debit, AccountTitle $credit): AccountingJournal {
     return new AccountingJournal(
   $this->repo->where(['debit_account_id' => $debit->Id, 'credit_account_id' => $credit->Id])
