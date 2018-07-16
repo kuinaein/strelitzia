@@ -11,11 +11,8 @@ const actionKey = {
   LOAD_ALL: 'LOAD_ALL',
 };
 
-export const AccountModule = {
+const vuexModule = {
   namespaced: true,
-  namespace: 'account',
-  mutaionKey,
-  actionKey,
   state: {
     accountTitles: null,
     accountTitleMap: null,
@@ -73,6 +70,13 @@ export const AccountModule = {
       });
     },
   },
+};
+
+export const AccountModule = {
+  namespace: 'account',
+  mutaionKey,
+  actionKey,
+  vuexModule,
 };
 
 Object.assign(AccountModule, createNamespacedHelpers(AccountModule.namespace));

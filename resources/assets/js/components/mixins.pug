@@ -1,2 +1,6 @@
-mixin faIcon(icon)
-  span.fa(class=`fa-${icon}` title=icon alt=icon)
+mixin faIcon(icon, clazz)
+  - clazz = clazz || 'stre-fa--left'
+  span.fa(class=`fa-${icon} ${clazz}` title=icon alt=icon)
+
+mixin modalCloseBtn(title)
+  button.btn.btn-secondary(type="button" data-dismiss="modal") #{title}

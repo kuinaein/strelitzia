@@ -16,7 +16,7 @@ include /components/mixins
             +faIcon("edit")
             template 記帳
           th {{ accountTitleMap[a.accountId].name }}
-          td.text-right {{ a.amount.toLocaleString('ja-JP', {style: 'currency', currency: 'JPY'}) }}
+          td.text-right {{ formatCurrency(a.amount) }}
 </template>
 
 <script>

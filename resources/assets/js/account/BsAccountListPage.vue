@@ -1,11 +1,13 @@
 <template lang="pug">
 include /components/mixins
+- labelClass = 'col-form-label col-sm-3'
+- controlClass = 'col-sm-9'
 
 .container
   h1 資産・負債科目マスタ
   button.btn.btn-secondary(type="button" @click="create")
     +faIcon("plus")
-    span &nbsp;追加
+    template 追加
   table.table.table-bordered.table-striped
     thead
       tr
@@ -29,29 +31,33 @@ include /components/mixins
       template(v-else) 追加
     template(v-if="null === editing.openingBalance") ロード中...
     form(v-else)
-      .form-group
-        label 科目名
-        input.form-control(v-model="editing.bsAccount.name" required)
-      .form-group
-        label タイプ
-        div.form-control-static(v-if="editing.bsAccount.id"
-            v-t="'enum.accountType.' + editing.bsAccount.type")
-        select.form-control(v-else v-model="editing.bsAccount.type" required)
-          option(v-for="t of targetTypes"
-              :value="t" v-t="'enum.accountType.' + t"
-              :key="'editing-account-type-choice-' + t")
-      .form-group
-        label 親科目
-        select.form-control(v-model="editing.bsAccount.parentId")
-          option(value="0") （なし）
-          option(v-for="a in parentCandidates" :value="a.id"
-              :key="'editing-account-parent-choice-' + a.id") {{ a.name }}
-      .form-group
-        label 開始残高
-        input.form-control(v-model="editing.openingBalance" type="number" required)
-      button.btn.btn-primary(type="button" @click="doSave") 保存
-      template &nbsp;
-      button.btn.btn-secondary(type="button" data-dismiss="modal") キャンセル
+      .form-group.row
+        label(class=labelClass) 科目名
+        div(class=controlClass)
+          input.form-control(v-model="editing.bsAccount.name" autofocus required)
+      .form-group.row
+        label(class=labelClass) タイプ
+        div(class=controlClass)
+          input.form-control-plaintext(readonly v-if="editing.bsAccount.id"
+              :value="$t('enum.accountType.' + editing.bsAccount.type)")
+          select.form-control(v-else v-model="editing.bsAccount.type" required)
+            option(v-for="t of targetTypes"
+                :value="t" v-t="'enum.accountType.' + t"
+                :key="'editing-account-type-choice-' + t")
+      .form-group.row
+        label(class=labelClass) 親科目
+        div(class=controlClass)
+          select.form-control(v-model="editing.bsAccount.parentId")
+            option(value="0") （なし）
+            option(v-for="a in parentCandidates" :value="a.id"
+                :key="'editing-account-parent-choice-' + a.id") {{ a.name }}
+      .form-group.row
+        label(class=labelClass) 開始残高
+        div(class=controlClass)
+          input.form-control(v-model="editing.openingBalance" type="number" min="0" required)
+      .form-group.row: div.offset-sm-3(class=controlClass)
+        button.btn.btn-primary(type="button" @click="doSave") 保存
+        +modalCloseBtn("キャンセル")
 </template>
 
 <script>

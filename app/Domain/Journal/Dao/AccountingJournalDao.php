@@ -47,6 +47,15 @@ class AccountingJournalDao {
     });
   }
 
+  public function calcBalance(int $accountId, Carbon $date): int {
+    $a = $this->accountDao->findOrFail($accountId);
+    $type = new AccountTitleType($a->type);
+    $debitSum = $this->sumOneSideForAccount($accountId, $date, 'debit');
+    logger($debitSum);
+    $creditSum = $this->sumOneSideForAccount($accountId, $date, 'credit');
+    return $type->isDebitSide() ? $debitSum - $creditSum : $creditSum - $debitSum;
+  }
+
   public function save(AccountingJournal $dto): AccountingJournal {
     $dto->unwrap()->save();
     return $dto;
@@ -57,31 +66,19 @@ class AccountingJournalDao {
    * @return array[int=>int] accountId => 金額
    */
   public function buildTrialBalance(array $accountTypes): array {
-    $debitSums = $this->sumOneSide($accountTypes, 'debit');
-    $creditSums = $this->sumOneSide($accountTypes, 'credit');
+    $debitSums = $this->sumOneSideForTypes($accountTypes, 'debit');
+    $creditSums = $this->sumOneSideForTypes($accountTypes, 'credit');
     $result = [];
 
     foreach ($debitSums as $d) {
-      switch ($d->type) {
-  case AccountTitleType::ASSET:
-  case AccountTitleType::EXPENSE:
-  $result[$d->id] = +$d->amount;
-  break;
-  default:
-  $result[$d->id] = -$d->amount;
-  }
+      $type = new AccountTitleType($d->type);
+      $result[$d->id] = $type->isDebitSide() ? +$d->amount : -$d->amount;
     }
 
     foreach ($creditSums as $c) {
-      switch ($c->type) {
-  case AccountTitleType::ASSET:
-  case AccountTitleType::EXPENSE:
-  $result[$c->id] = isset($result[$c->id]) ? $result[$c->id] - $c->amount : -$c->amount;
-  break;
-  default:
-  $result[$c->id] = isset($result[$c->id]) ? $result[$c->id] + $c->amount : +$c->amount;
-  break;
-  }
+      $type = new AccountTitleType($c->type);
+      $diff = $type->isDebitSide() ? -$c->amount : +$c->amount;
+      $result[$c->id] = isset($result[$c->id]) ? $result[$c->id] + $diff : $diff;
     }
     return $result;
   }
@@ -93,7 +90,14 @@ class AccountingJournalDao {
     ->get();
   }
 
-  private function sumOneSide(array $accountTypes, string $side): Collection {
+  private function sumOneSideForAccount(int $accountId, Carbon $date, string $side): int {
+    return $this->repo->select(DB::raw('sum(amount) as balance'))
+    ->where([$side . '_account_id' => $accountId])
+    ->where('journal_date', '<', $date)
+    ->get()[0]->balance ?? 0;
+  }
+
+  private function sumOneSideForTypes(array $accountTypes, string $side): Collection {
     return $this->repo->select(
   'account_title.type',
   'account_title.id',

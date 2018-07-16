@@ -10,6 +10,6 @@ export const store = new Vuex.Store({
     apiRoot: '/api',
   },
   modules: {
-    [AccountModule.namespace]: AccountModule,
+    [AccountModule.namespace]: AccountModule.vuexModule,
   },
 });

@@ -6,7 +6,6 @@ const CircularDependencyPlugin = require('circular-dependency-plugin');
 const Vue = require('vue');
 const VueI18n = require('vue-i18n');
 const i18nExtensions = require('vue-i18n-extensions');
-Vue.use(VueI18n);
 
 /*
  |--------------------------------------------------------------------------
@@ -32,6 +31,7 @@ mix.extend('vuePug', (webpackConfig, ...args) => {
 });
 
 mix.extend('vueI18n', (webpackConfig, ...args) => {
+  Vue.use(VueI18n);
   const i18n = new VueI18n({
     locale: 'ja',
     messages: require(path.join(__dirname, 'resources/assets/js/app/strings.json')),

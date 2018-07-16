@@ -8,6 +8,7 @@ use App\Domain\Account\Dao\AccountTitleDao;
 use App\Domain\Account\Dto\AccountTitleType;
 use App\Domain\Account\Dto\SystemAccountTitleKey;
 use App\Domain\Journal\Dao\AccountingJournalDao;
+use App\Domain\Journal\Service\LedgerPageLoadService;
 use App\Domain\Journal\Service\TrialBalanceBuildService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -20,24 +21,25 @@ class LedgerApiController extends Controller {
 
   private $trialBalanceBuildService;
 
+  private $ledgerPageLoadService;
+
   public function __construct(
   AccountingJournalDao $journalDao,
   AccountTitleDao $accountDao,
-  TrialBalanceBuildService $trialBalanceBuildService
+  TrialBalanceBuildService $trialBalanceBuildService,
+  LedgerPageLoadService $ledgerPageLoadService
   ) {
     $this->journalDao = $journalDao;
     $this->accountDao = $accountDao;
     $this->trialBalanceBuildService = $trialBalanceBuildService;
+    $this->ledgerPageLoadService = $ledgerPageLoadService;
   }
 
   public function index(Request $request, int $accountId, string $month): array {
-    $cMonth = Carbon::parse($month);
-    $journals = $this->journalDao->listByAccountIdAndPeriod(
-  $accountId,
-  $cMonth->startOfMonth(),
-  $cMonth->copy()->endOfMonth()
-  );
-    return ['data' => $journals, 'message' => 'OK'];
+    $start = Carbon::parse($month)->startOfMonth();
+    $end = $start->copy()->addMonth()->startOfMonth();
+    $result = $this->ledgerPageLoadService->load($accountId, $start, $end);
+    return ['data' => $result, 'message' => 'OK'];
   }
 
   public function showTrialBalance(Request $request): array {

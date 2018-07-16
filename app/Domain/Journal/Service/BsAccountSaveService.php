@@ -49,7 +49,8 @@ class BsAccountSaveService {
       $a = $this->dao->save($bsAccount);
       $isAsset = $bsAccount->type === AccountTitleType::ASSET;
       $j = new AccountingJournal();
-      $j->journalDate = Carbon::createFromDate(1, 1, 1);
+      // MySQLのDATE型の最小値は1000-01-01なので一応そちらに合わせておく
+      $j->journalDate = Carbon::createFromDate(1000, 1, 1);
       $j->debitAccountId = $isAsset ? $a->id : $op->id;
       $j->creditAccountId = $isAsset ? $op->id : $a->id;
       $j->amount = $openingBalance;

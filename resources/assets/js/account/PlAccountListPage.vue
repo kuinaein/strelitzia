@@ -1,11 +1,13 @@
 <template lang="pug">
 include /components/mixins
+- labelClass = 'col-form-label col-sm-3'
+- controlClass = 'col-sm-9'
 
 .container
   h1 収益・費用科目マスタ
   button.btn.btn-secondary(type="button" @click="create")
     +faIcon("plus")
-    span &nbsp;追加
+    template 追加
   table.table.table-bordered.table-striped
     thead
       tr
@@ -28,26 +30,29 @@ include /components/mixins
       template(v-if="editing.plAccount.id") 編集
       template(v-else) 追加
     form
-      .form-group
-        label 科目名
-        input.form-control(v-model="editing.plAccount.name" required)
-      .form-group
-        label タイプ
-        div.form-control-static(v-if="editing.plAccount.id"
-            v-t="'enum.accountType.' + editing.plAccount.type")
-        select.form-control(v-else v-model="editing.plAccount.type" required)
-          option(v-for="t of targetTypes"
-              :value="t" v-t="'enum.accountType.' + t"
-              :key="'editing-account-type-choice-' + t")
-      .form-group
-        label 親科目
-        select.form-control(v-model="editing.plAccount.parentId")
-          option(value="0") （なし）
-          option(v-for="a in parentCandidates" :value="a.id"
-              :key="'editing-account-parent-choice-' + a.id") {{ a.name }}
-      button.btn.btn-primary(type="button" @click="doSave") 保存
-      template &nbsp;
-      button.btn.btn-secondary(type="button" data-dismiss="modal") キャンセル
+      .form-group.row
+        label(class=labelClass) 科目名
+        div(class=controlClass)
+          input.form-control(v-model="editing.plAccount.name" autofocus required)
+      .form-group.row
+        label(class=labelClass) タイプ
+        div(class=controlClass)
+          input.form-control-plaintext(readonly v-if="editing.plAccount.id"
+              :value="$t('enum.accountType.' + editing.plAccount.type)")
+          select.form-control(v-else v-model="editing.plAccount.type" required)
+            option(v-for="t of targetTypes"
+                :value="t" v-t="'enum.accountType.' + t"
+                :key="'editing-account-type-choice-' + t")
+      .form-group.row
+        label(class=labelClass) 親科目
+        div(class=controlClass)
+          select.form-control(v-model="editing.plAccount.parentId")
+            option(value="0") （なし）
+            option(v-for="a in parentCandidates" :value="a.id"
+                :key="'editing-account-parent-choice-' + a.id") {{ a.name }}
+      .form-group.row: div.offset-sm-3(class=controlClass)
+        button.btn.btn-primary(type="button" @click="doSave") 保存
+        +modalCloseBtn("キャンセル")
 </template>
 
 <script>

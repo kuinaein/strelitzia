@@ -7,15 +7,25 @@ namespace App\Domain\Account\Dto;
 use App\Util\Enum;
 
 class AccountTitleType extends Enum {
-  const ASSET = 'ASSET';
+  public const ASSET = 'ASSET';
 
-  const LIABILITY = 'LIABILITY';
+  public const LIABILITY = 'LIABILITY';
 
-  const NET_ASSET = 'NET_ASSET';
+  public const NET_ASSET = 'NET_ASSET';
 
-  const REVENUE = 'REVENUE';
+  public const REVENUE = 'REVENUE';
 
-  const EXPENSE = 'EXPENSE';
+  public const EXPENSE = 'EXPENSE';
 
-  const OTHER = 'OTHER';
+  public const OTHER = 'OTHER';
+
+  public function isDebitSide() {
+    switch ($this->valueOf()) {
+  case self::ASSET:
+  case self::EXPENSE:
+  return true;
+  default:
+  return false;
+  }
+  }
 }
