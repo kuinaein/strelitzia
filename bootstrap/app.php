@@ -50,10 +50,14 @@ $app->singleton(
 );
 
 $app->configureMonologUsing(function ($monolog) {
-  $monolog->pushHandler(new StreamHandler('php://stderr'));
+  $levelStr = strtoupper(config('app.log_level'));
+  $level = (new ReflectionClass(Logger::class))->getConstant($levelStr);
+
+  $monolog->pushHandler(new StreamHandler('php://stderr', $level));
   $monolog->pushHandler(new RotatingFileHandler(
   storage_path('logs/strelitzia.log'),
-  30
+  config('app.log_max_files'),
+  $level
   ));
 
   // クラス名等を extra フィールドに挿入するプロセッサを生成

@@ -1,7 +1,6 @@
 {
-    "name": "laravel/laravel",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "name": "kuinaein/strelitzia",
+    "description": "A personal finance software",
     "license": "MIT",
     "type": "project",
     "require": {

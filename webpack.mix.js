@@ -64,9 +64,7 @@ mix.js('resources/assets/js/app.js', 'public/js')
   })
   .vuePug()
   .vueI18n()
-  .sass('resources/assets/sass/app.scss', 'public/css', {
-    includePaths: ['node_modules', 'node_modules/bootstrap-honoka/scss'],
-  })
+  .sass('resources/assets/sass/app.scss', 'public/css')
   .options({
     processCssUrls: false,
   })

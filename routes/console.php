@@ -13,6 +13,35 @@ declare(strict_types=1);
 |
 */
 
+Artisan::command('stre:deploy', function (): void {
+  $this->call('stre:clean');
+  passthru('yarn install');
+  passthru('npm run prod');
+  $this->call('migrate');
+
+  $this->call('optimize');
+  $this->call('config:cache');
+  $this->call('route:cache');
+})->describe('デプロイ');
+
+Artisan::command('stre:clean', function (): void {
+  $this->call('cache:clear');
+  $this->call('config:clear');
+  $this->call('route:clear');
+  $this->call('view:clear');
+})->describe('キャッシュなどのクリア');
+
+Artisan::command('stre:update', function (): void {
+  $this->call('migrate');
+  $this->call('stre:deploy');
+})->describe('アップデート');
+
+Artisan::command('stre:install', function (): void {
+  $this->call('key:generate');
+  $this->call('migrate:install');
+  $this->call('stre:update');
+})->describe('インストール');
+
 Artisan::command('stre:createdb', function (): void {
   $user = config('database.connections.pgsql.username');
   $pass = config('database.connections.pgsql.password');
@@ -22,20 +51,19 @@ Artisan::command('stre:createdb', function (): void {
   passthru($psqlCmd . "\"CREATE USER ${user} WITH ENCRYPTED PASSWORD '${pass}'\"");
   passthru($psqlCmd . "\"CREATE DATABASE ${db} WITH OWNER ${user} ENCODING 'UTF8'" .
   " LC_COLLATE 'C' LC_CTYPE 'C' TEMPLATE template0\"");
-  Artisan::call('migrate:install');
 })->describe('データベース初期化');
 
-Artisan::command('stre:cs', function (): void {
-  @unlink(base_path('.php_cs.cache'));
-  passthru(base_path('vendor/bin/php-cs-fixer') . ' fix');
-  passthru('npm run lint-fix');
-})->describe('lintとコード整形');
-
 Artisan::command('stre:dev', function (): void {
-  $spawnCmd = 'nohup xfce4-terminal --tab -T \'' . config('app.name') . '\' -x ';
+  $spawnCmd = 'xfce4-terminal --tab -T \'' . config('app.name') . '\' -x ';
   passthru('npm run dev');
   exec($spawnCmd . 'npm run watch');
   exec($spawnCmd . 'php artisan serve');
   sleep(1);
   passthru('xdg-open ' . config('app.url'));
 })->describe('開発環境として起動');
+
+Artisan::command('stre:cs', function (): void {
+  @unlink(base_path('.php_cs.cache'));
+  passthru(base_path('vendor/bin/php-cs-fixer') . ' fix');
+  passthru('npm run lint-fix');
+})->describe('lintとコード整形');
