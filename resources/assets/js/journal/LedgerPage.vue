@@ -142,6 +142,10 @@ export default extendVue({
       this.$refs.entryDlg.open();
     },
     doMakeEntry () {
+      if (!this.editingEntry.anotherAccountId) {
+        alert('相手科目を選択してください');
+        return;
+      }
       const postData = {
         id: this.editingEntry.id || undefined,
         journalDate: this.editingEntry.journalDate,
