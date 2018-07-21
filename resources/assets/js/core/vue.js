@@ -26,7 +26,8 @@ const BaseVue = {
 
 export function extendVue(options) {
   const v = Object.assign({}, BaseVue, options);
-  v.computed = Object.assign({},BaseVue.computed, options.computed || {});
-  v.methods = Object.assign({},BaseVue.methods, options.methods || {});
+  v.computed = Object.assign({}, BaseVue.computed, options.computed || {});
+  v.watch = Object.assign({}, BaseVue.watch, options.watch || {});
+  v.methods = Object.assign({}, BaseVue.methods, options.methods || {});
   return v;
 }

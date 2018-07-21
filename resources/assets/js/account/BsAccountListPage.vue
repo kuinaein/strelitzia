@@ -109,7 +109,13 @@ export default extendVue({
     },
     parentCandidates () {
       return this.bsAccounts
-        .filter(a => !csvContains(a.path, this.editing.bsAccount.path, ACCOUNT_PATH_SEPARATOR));
+        .filter(a => a.type === this.editing.bsAccount.type &&
+            !csvContains(a.path, this.editing.bsAccount.path, ACCOUNT_PATH_SEPARATOR));
+    },
+  },
+  watch: {
+    'editing.bsAccount.type' () {
+      this.editing.bsAccount.parentId = 0;
     },
   },
   methods: {

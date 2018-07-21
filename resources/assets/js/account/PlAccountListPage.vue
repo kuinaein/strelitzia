@@ -103,7 +103,13 @@ export default extendVue({
     },
     parentCandidates () {
       return this.plAccounts
-        .filter(a => !csvContains(a.path, this.editing.plAccount.path, ACCOUNT_PATH_SEPARATOR));
+        .filter(a => a.type === this.editing.plAccount.type &&
+            !csvContains(a.path, this.editing.plAccount.path, ACCOUNT_PATH_SEPARATOR));
+    },
+  },
+  watch: {
+    'editing.plAccount.type' () {
+      this.editing.plAccount.parentId = 0;
     },
   },
   methods: {
