@@ -29,7 +29,9 @@ class AccountingJournalSaveService {
    */
   public function create(AccountingJournal $journal): AccountingJournal {
     $this->validate($journal);
-    $j = $this->dao->save($journal);
+    $j = DB::transaction(function () use ($journal) {
+      return $this->dao->save($journal);
+    });
     logger('記帳', ['仕訳' => $j]);
     return $j;
   }
@@ -47,6 +49,12 @@ class AccountingJournalSaveService {
       $j = $this->dao->save($new);
       logger('記帳修正', ['仕訳' => $j]);
       return $j;
+    });
+  }
+
+  public function destroy(int $journalId): void {
+    DB::transaction(function () use ($journalId): void {
+      $this->dao->destroy($journalId);
     });
   }
 

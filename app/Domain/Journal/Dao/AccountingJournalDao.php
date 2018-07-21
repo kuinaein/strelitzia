@@ -67,6 +67,10 @@ class AccountingJournalDao {
     return $dto;
   }
 
+  public function destroy(int $dtoId): void {
+    $this->repo->destroy($dtoId);
+  }
+
   /**
    * @param \App\Domain\Account\Dto\AccountTitleType[] $accountTypes
    * @return array[int=>int] accountId => 金額

@@ -3,9 +3,9 @@ const mix = require('laravel-mix');
 const path = require('path');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 
-const Vue = require('vue');
-const VueI18n = require('vue-i18n');
-const i18nExtensions = require('vue-i18n-extensions');
+// const Vue = require('vue');
+// const VueI18n = require('vue-i18n');
+// const i18nExtensions = require('vue-i18n-extensions');
 
 /*
  |--------------------------------------------------------------------------
@@ -30,22 +30,22 @@ mix.extend('vuePug', (webpackConfig, ...args) => {
   }
 });
 
-mix.extend('vueI18n', (webpackConfig, ...args) => {
-  Vue.use(VueI18n);
-  const i18n = new VueI18n({
-    locale: 'ja',
-    messages: require(path.join(__dirname, 'resources/assets/js/app/strings.json')),
-  });
+// mix.extend('vueI18n', (webpackConfig, ...args) => {
+//   Vue.use(VueI18n);
+//   const i18n = new VueI18n({
+//     locale: 'ja',
+//     messages: require(path.join(__dirname, 'resources/assets/js/app/strings.json')),
+//   });
 
-  for (const rule of webpackConfig.module.rules) {
-    if ('vue-loader' !== rule.loader) {
-      continue;
-    }
-    rule.options.compilerModules = rule.options.compilerModules || [];
-    rule.options.compilerModules.push(i18nExtensions.module(i18n));
-    console.log('vue-i18n-extensionsモジュールを導入しました');
-  }
-});
+//   for (const rule of webpackConfig.module.rules) {
+//     if ('vue-loader' !== rule.loader) {
+//       continue;
+//     }
+//     rule.options.compilerModules = rule.options.compilerModules || [];
+//     rule.options.compilerModules.push(i18nExtensions.module(i18n));
+//     console.log('vue-i18n-extensionsモジュールを導入しました');
+//   }
+// });
 
 mix.js('resources/assets/js/app.js', 'public/js')
   .webpackConfig({
@@ -63,7 +63,7 @@ mix.js('resources/assets/js/app.js', 'public/js')
     ],
   })
   .vuePug()
-  .vueI18n()
+  // .vueI18n()
   .sass('resources/assets/sass/app.scss', 'public/css')
   .options({
     processCssUrls: false,

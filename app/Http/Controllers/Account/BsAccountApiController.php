@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Account;
 
-use App\Domain\Account\Dao\BsAccountDao;
 use App\Domain\Account\Dto\BsAccount;
 use App\Domain\Journal\Service\BsAccountSaveService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class BsAccountApiController extends Controller {
-  private $dao;
-
+  /**
+   * @var BsAccountSaveService
+   */
   private $saveService;
 
-  public function __construct(BsAccountDao $dao, BsAccountSaveService $saveService) {
-    $this->dao = $dao;
+  public function __construct(BsAccountSaveService $saveService) {
     $this->saveService = $saveService;
   }
 

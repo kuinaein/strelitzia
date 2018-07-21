@@ -25,6 +25,9 @@ Route::group(['prefix' => 'journal', 'namespace' => 'Journal'], function (Router
   $router->post('trial-balance', 'LedgerApiController@showTrialBalance');
   $router->get('opening/{bsAccountId}', 'LedgerApiController@showOpeningBalance');
   $router->get('ledger/{accountId}/{month}', 'LedgerApiController@index');
-  $router->post('ledger/{accountId}', 'LedgerApiController@store');
-  $router->put('ledger/{accountId}/{journalId}', 'LedgerApiController@update');
+  $router->resource(
+  'ledger/{accountId}/journal',
+  'LedgerApiController',
+  ['only' => ['store', 'update', 'destroy'], 'parameters' => ['journal' => 'journalId']]
+  );
 });

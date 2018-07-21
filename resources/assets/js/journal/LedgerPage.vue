@@ -32,9 +32,13 @@ include /components/mixins
         th 減少
         th 残高
       tbody: tr(v-for="j of journals" :key="'journal-' + j.id")
-        td: button.btn.btn-warning(type="button" @click="editEntry(j)")
-          +faIcon("edit")
-          template 修正
+        td
+          button.btn.btn-warning(type="button" @click="editEntry(j)")
+            +faIcon("edit")
+            template 修正
+          button.btn.btn-danger(type="button" @click="removeEntry(j.id)")
+            +faIcon("trash")
+            template 削除
         td {{ j.id }}
         td {{ j.journalDate }}
         th {{ accountTitleMap[j.debitAccountId === parseInt(accountId) ? j.creditAccountId : j.debitAccountId].name }}
@@ -163,8 +167,8 @@ export default extendVue({
         postData.creditAccountId = this.editingEntry.anotherAccountId;
       }
       const promise = this.editingEntry.id
-        ? axios.put(`${this.apiRoot}/journal/ledger/${this.accountId}/${postData.id}`, postData)
-        : axios.post(`${this.apiRoot}/journal/ledger/${this.accountId}`, postData);
+        ? axios.put(`${this.apiRoot}/journal/ledger/${this.accountId}/journal/${postData.id}`, postData)
+        : axios.post(`${this.apiRoot}/journal/ledger/${this.accountId}/journal`, postData);
       promise.then(() => {
         alert('保存しました');
         this.$refs.entryDlg.close();
@@ -188,6 +192,20 @@ export default extendVue({
       if (isAnotherDebitSide !== AccountTitleTypeDesc[type].isDebitSide) {
         entry.amount = -entry.amount;
       }
+    },
+    /**
+     * @param {Number} journalId
+     */
+    removeEntry (journalId) {
+      if (!confirm(`記帳データ[${journalId}]を削除してもよろしいですか？`)) {
+        return;
+      }
+      axios.delete(`${this.apiRoot}/journal/ledger/${this.accountId}/journal/${journalId}`).then(() => {
+        alert(`記帳データ[${journalId}]を削除しました`);
+        this.streInit();
+      }).catch(err => {
+        alert(`記帳データ[${journalId}]の削除に失敗しました: ` + err);
+      });
     },
   },
 });

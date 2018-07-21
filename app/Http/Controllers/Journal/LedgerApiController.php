@@ -17,14 +17,29 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 class LedgerApiController extends Controller {
+  /**
+   * @var AccountingJournalDao
+   */
   private $journalDao;
 
+  /**
+   * @var AccountTitleDao
+   */
   private $accountDao;
 
+  /**
+   * @var TrialBalanceBuildService
+   */
   private $trialBalanceBuildService;
 
+  /**
+   * @var LedgerPageLoadService
+   */
   private $ledgerPageLoadService;
 
+  /**
+   * @var AccountingJournalSaveService
+   */
   private $saveService;
 
   public function __construct(
@@ -70,6 +85,12 @@ class LedgerApiController extends Controller {
   public function update(Request $request, int $accountId, int $journalId): array {
     $j = new AccountingJournal($request->all());
     $this->saveService->update($j);
+    return ['messsage' => 'OK'];
+  }
+
+  // Remove the specified resource from storage.
+  public function destroy(int $accountId, int $journalId): array {
+    $this->saveService->destroy($journalId);
     return ['messsage' => 'OK'];
   }
 

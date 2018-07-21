@@ -32,7 +32,9 @@ class PlAccountSaveService {
    */
   public function create(PlAccount $plAccount): PlAccount {
     $this->validate($plAccount);
-    $a = $this->dao->save($plAccount);
+    $a = DB::transaction(function () use ($plAccount) {
+      return $this->dao->save($plAccount);
+    });
     info('収益・費用科目の追加', ['新科目' => $a]);
     return $a;
   }

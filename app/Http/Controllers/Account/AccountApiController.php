@@ -8,6 +8,9 @@ use App\Domain\Account\Dao\AccountTitleDao;
 use App\Http\Controllers\Controller;
 
 class AccountApiController extends Controller {
+  /**
+   * @var AccountTitleDao
+   */
   private $dao;
 
   public function __construct(AccountTitleDao $dao) {

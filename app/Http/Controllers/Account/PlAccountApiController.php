@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Account;
 
-use App\Domain\Account\Dao\PlAccountDao;
 use App\Domain\Account\Dto\PlAccount;
 use App\Domain\Journal\Service\PlAccountSaveService;
 use App\Http\Controllers\Controller;
@@ -12,17 +11,11 @@ use Illuminate\Http\Request;
 
 class PlAccountApiController extends Controller {
   /**
-   * @var PlAccountDao
-   */
-  private $dao;
-
-  /**
    * @var PlAccountSaveService
    */
   private $saveService;
 
-  public function __construct(PlAccountDao $dao, PlAccountSaveService $saveService) {
-    $this->dao = $dao;
+  public function __construct(PlAccountSaveService $saveService) {
     $this->saveService = $saveService;
   }
 
@@ -49,13 +42,4 @@ class PlAccountApiController extends Controller {
     $this->saveService->update($a);
     return ['messsage' => 'OK'];
   }
-
-  /*
-   * Remove the specified resource from storage.
-   *
-   * @param int $id
-   * @return \Illuminate\Http\Response
-   */
-  // public function destroy($id) {
-  // }
 }
