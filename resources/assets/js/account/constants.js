@@ -1,11 +1,11 @@
 export const ACCOUNT_PATH_SEPARATOR = ' / ';
 
 export const AccountTitleType = {
+  REVENUE: 'REVENUE',
+  EXPENSE: 'EXPENSE',
   ASSET: 'ASSET',
   LIABILITY: 'LIABILITY',
   NET_ASSET: 'NET_ASSET',
-  REVENUE: 'REVENUE',
-  EXPENSE: 'EXPENSE',
   OTHER: 'OTHER',
 };
 
@@ -15,39 +15,39 @@ export const FinancialStatementType = {
 };
 
 export const AccountTitleTypeDesc = {
-  [AccountTitleType.ASSET]: {
-    order: 10,
-    isDebitSide: true,
-    statements: {
-      [FinancialStatementType.BALANCE_SHEET]: true,
-    },
-  },
-  [AccountTitleType.LIABILITY]: {
-    order: 20,
-    isDebitSide: false,
-    statements: {
-      [FinancialStatementType.BALANCE_SHEET]: true,
-    },
-  },
-  [AccountTitleType.NET_ASSET]: {
-    order: 30,
-    isDebitSide: false,
-    statements: {
-      [FinancialStatementType.BALANCE_SHEET]: true,
-    },
-  },
   [AccountTitleType.REVENUE]: {
-    order: 40,
+    order: 10,
     isDebitSide: false,
     statements: {
       [FinancialStatementType.PROFIT_AND_LOSS_STATEMENT]: true,
     },
   },
   [AccountTitleType.EXPENSE]: {
-    order: 50,
+    order: 20,
     isDebitSide: true,
     statements: {
       [FinancialStatementType.PROFIT_AND_LOSS_STATEMENT]: true,
+    },
+  },
+  [AccountTitleType.ASSET]: {
+    order: 30,
+    isDebitSide: true,
+    statements: {
+      [FinancialStatementType.BALANCE_SHEET]: true,
+    },
+  },
+  [AccountTitleType.LIABILITY]: {
+    order: 40,
+    isDebitSide: false,
+    statements: {
+      [FinancialStatementType.BALANCE_SHEET]: true,
+    },
+  },
+  [AccountTitleType.NET_ASSET]: {
+    order: 50,
+    isDebitSide: false,
+    statements: {
+      [FinancialStatementType.BALANCE_SHEET]: true,
     },
   },
   [AccountTitleType.OTHER]: {
