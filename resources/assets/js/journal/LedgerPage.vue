@@ -171,13 +171,19 @@ export default extendVue({
     },
     editEntry (journal) {
       this.editingEntry = Object.assign({}, journal);
-      console.log(journal);
-      if (journal.debitAccountId === parseInt(this.accountId)) {
-        this.editingEntry.anotherAccountId = journal.creditAccountId;
-      } else {
-        this.editingEntry.anotherAccountId = journal.debitAccountId;
-      }
+      this.setAnotherAccount(this.editingEntry,
+        journal.debitAccountId !== parseInt(this.accountId));
       this.$refs.entryDlg.open();
+    },
+    /**
+     * @param {Boolean} isAnotherDebitSide
+     */
+    setAnotherAccount (entry, isAnotherDebitSide) {
+      entry.anotherAccountId = isAnotherDebitSide ? entry.debitAccountId : entry.creditAccountId;
+      const type = this[AccountModule.stateKey.accountTitleMap][entry.anotherAccountId].type;
+      if (isAnotherDebitSide !== AccountTitleTypeDesc[type].isDebitSide) {
+        entry.amount = -entry.amount;
+      }
     },
   },
 });

@@ -6,7 +6,7 @@ import { ACCOUNT_PATH_SEPARATOR, AccountTitleTypeDesc } from '@/account/constant
 const stateKey = {
   accountTitles: 'accountTitles',
   accountTitleMap: 'accountTitleMap',
-}
+};
 
 const mutaionKey = {
   CACHE_ACCOUNT_TITLES: 'CACHE_ACCOUNT_TITLES',
