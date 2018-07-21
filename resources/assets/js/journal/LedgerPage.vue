@@ -25,7 +25,7 @@ include /components/mixins
     table.table.table-striped.table-bordered(v-else)
       thead: tr
         th 操作
-        th ID
+        th 番号
         th 日付
         th 相手科目
         th 増加
