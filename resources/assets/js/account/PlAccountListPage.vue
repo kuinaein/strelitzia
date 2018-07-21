@@ -76,7 +76,7 @@ export default extendVue({
       editing: {
         plAccount: {
           name: '',
-          type: AccountTitleType.REVENUE,
+          type: AccountTitleType.EXPENSE,
           parentId: 0,
         },
       },
