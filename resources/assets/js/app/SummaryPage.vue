@@ -37,7 +37,7 @@ export default extendVue({
   },
   computed: {
     ...mapConstants({AccountTitleType, AccountTitleTypeDesc, FinancialStatementType}),
-    ...AccountModule.mapState(['accountTitleMap']),
+    ...AccountModule.mapState([AccountModule.stateKey.accountTitleMap]),
     thisMonth() {
       return moment().format('YYYY-MM');
     },

@@ -8,7 +8,7 @@ div
     #stre-navbar.collapse.navbar-collapse: ul.navbar-nav.mr-auto
       li.nav-item: router-link.nav-link(to="/bs-account") 資産・負債科目
       li.nav-item: router-link.nav-link(to="/pl-account") 収益・費用科目
-  .container(v-if="null === accountTitles") ロード中...
+  .container(v-if="!accountTitles") ロード中...
   router-view(v-else)
 </template>
 
@@ -17,7 +17,7 @@ import { extendVue } from '@/core/vue';
 import { AccountModule } from '@/account/AccountModule';
 
 export default extendVue({
-  computed: AccountModule.mapState(['accountTitles']),
+  computed: AccountModule.mapState([AccountModule.stateKey.accountTitles]),
   methods: AccountModule.mapActions({
     loadAllAccountData: AccountModule.actionKey.LOAD_ALL,
     streInit() {

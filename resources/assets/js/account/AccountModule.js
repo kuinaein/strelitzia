@@ -3,6 +3,11 @@ import axios from 'axios';
 
 import { ACCOUNT_PATH_SEPARATOR, AccountTitleTypeDesc } from '@/account/constants';
 
+const stateKey = {
+  accountTitles: 'accountTitles',
+  accountTitleMap: 'accountTitleMap',
+}
+
 const mutaionKey = {
   CACHE_ACCOUNT_TITLES: 'CACHE_ACCOUNT_TITLES',
 };
@@ -14,13 +19,13 @@ const actionKey = {
 const vuexModule = {
   namespaced: true,
   state: {
-    accountTitles: null,
-    accountTitleMap: null,
+    [stateKey.accountTitles]: null,
+    [stateKey.accountTitleMap]: null,
   },
   mutations: {
     [mutaionKey.CACHE_ACCOUNT_TITLES] (state, {accountTitles, accountTitleMap}) {
-      state.accountTitles = accountTitles;
-      state.accountTitleMap = accountTitleMap;
+      state[stateKey.accountTitles] = accountTitles;
+      state[stateKey.accountTitleMap] = accountTitleMap;
     },
   },
   actions: {
@@ -74,6 +79,7 @@ const vuexModule = {
 
 export const AccountModule = {
   namespace: 'account',
+  stateKey,
   mutaionKey,
   actionKey,
   vuexModule,

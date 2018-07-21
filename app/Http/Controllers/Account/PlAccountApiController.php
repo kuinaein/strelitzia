@@ -11,8 +11,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class PlAccountApiController extends Controller {
+  /**
+   * @var PlAccountDao
+   */
   private $dao;
 
+  /**
+   * @var PlAccountSaveService
+   */
   private $saveService;
 
   public function __construct(PlAccountDao $dao, PlAccountSaveService $saveService) {
@@ -39,7 +45,7 @@ class PlAccountApiController extends Controller {
    * @return \Illuminate\Http\Response
    */
   public function update(Request $request, int $id): array {
-    $a = new PlAccount($request->bsAccount);
+    $a = new PlAccount($request->plAccount);
     $this->saveService->update($a);
     return ['messsage' => 'OK'];
   }

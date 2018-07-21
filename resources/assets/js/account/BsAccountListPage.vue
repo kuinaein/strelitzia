@@ -90,7 +90,10 @@ export default extendVue({
   },
   computed: {
     ...mapConstants({AccountTitleType}),
-    ...AccountModule.mapState(['accountTitles', 'accountTitleMap']),
+    ...AccountModule.mapState([
+      AccountModule.stateKey.accountTitles,
+      AccountModule.stateKey.accountTitleMap,
+    ]),
     targetTypes () {
       return Object.keys(AccountTitleTypeDesc).reduce((r, k) => {
         if (AccountTitleTypeDesc[k].statements[FinancialStatementType.BALANCE_SHEET]) {

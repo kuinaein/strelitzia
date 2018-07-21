@@ -97,7 +97,10 @@ export default extendVue({
   },
   props: ['accountId', 'month'],
   computed: {
-    ...AccountModule.mapState(['accountTitles', 'accountTitleMap']),
+    ...AccountModule.mapState([
+      AccountModule.stateKey.accountTitles,
+      AccountModule.stateKey.accountTitleMap,
+    ]),
     prevMonth () {
       return moment(this.month, 'YYYY-MM').subtract(1, 'months').format('YYYY-MM');
     },
