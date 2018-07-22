@@ -68,7 +68,7 @@ mix.js('resources/assets/js/app.js', 'public/js')
   .options({
     processCssUrls: false,
   })
-  .copyDirectory('node_modules/font-awesome-scss/fonts', 'public/fonts');
+  .copyDirectory('node_modules/font-awesome/fonts', 'public/fonts');
 
 
 if ('development' === process.env.NODE_ENV) {

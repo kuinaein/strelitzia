@@ -27,6 +27,7 @@ include /components/mixins
         th 操作
         th 番号
         th 日付
+        th 摘要
         th 相手科目
         th 増加
         th 減少
@@ -41,7 +42,8 @@ include /components/mixins
             template 削除
         td {{ j.id }}
         td {{ j.journalDate }}
-        th {{ accountTitleMap[j.debitAccountId === parseInt(accountId) ? j.creditAccountId : j.debitAccountId].name }}
+        th {{ j.remarks }}
+        td {{ accountTitleMap[j.debitAccountId === parseInt(accountId) ? j.creditAccountId : j.debitAccountId].name }}
         template(v-if="isDebitSide === (j.debitAccountId === parseInt(accountId))")
           td.text-right {{ formatCurrency(j.amount) }}
           td
@@ -57,6 +59,10 @@ include /components/mixins
         label(class=entryLabelClass) 日付
         div(class=entryControlClass)
           input.form-control(type="date" v-model="editingEntry.journalDate" autofocus required)
+      .form-group.row
+        label(class=entryLabelClass) 摘要
+        div(class=entryControlClass)
+          input.form-control(v-model="editingEntry.remarks" required)
       .form-groupr.row
         label(class=entryLabelClass) 口座
         div(class=entryControlClass)
@@ -94,6 +100,7 @@ export default extendVue({
       editingEntry: {
         id: null,
         journalDate: moment().format('YYYY-MM-DD'),
+        remarks: '',
         anotherAccountId: null,
         amount: '',
       },
@@ -153,6 +160,7 @@ export default extendVue({
       const postData = {
         id: this.editingEntry.id || undefined,
         journalDate: this.editingEntry.journalDate,
+        remarks: this.editingEntry.remarks,
         amount: Math.abs(this.editingEntry.amount),
       };
       const anotherAccountType =

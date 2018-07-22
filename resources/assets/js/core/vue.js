@@ -19,7 +19,8 @@ const BaseVue = {
   },
   methods: {
     formatCurrency (n) {
-      return n.toLocaleString('ja-JP', {style: 'currency', currency: 'JPY'});
+      return !n ? ''
+        : n.toLocaleString('ja-JP', {style: 'currency', currency: 'JPY'});
     },
   },
 };
