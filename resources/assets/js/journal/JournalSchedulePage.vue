@@ -28,7 +28,7 @@ include /components/mixins
         th 金額
       tbody: tr(v-for="s of schedules" :key="'journal-schedule-' + s.id")
         td
-          button.btn.btn-primary(type="button" @click="doJournal(s)" :disabled="now.isBefore(s.nextPostDate)")
+          button.btn.btn-primary(type="button" @click="doJournal(s)" :disabled="!s.enabled || now.isBefore(s.nextPostDate)")
             +faIcon("flash")
             | 仕訳
           button.btn.btn-secondary(type="button" @click="editSchedule(s)")
@@ -122,7 +122,7 @@ export default extendVue({
         return [];
       }
       const now = moment();
-      return this.schedules.filter(s => now.isAfter(s.nextPostDate));
+      return this.schedules.filter(s => s.enabled && now.isAfter(s.nextPostDate));
     },
   },
   watch: {
@@ -140,7 +140,17 @@ export default extendVue({
   methods: {
     streInit () {
       axios.get(`${this.apiRoot}/journal/schedule`).then(res => {
-        this.schedules = res.data.data;
+        const schedules = res.data.data;
+        schedules.sort((a, b) => {
+          if (a.enabled !== b.enabled) {
+            return a.enabled ? -1 : 1;
+          }
+          if (a.nextPostDate !== b.nextPostDate) {
+            return a.nextPostDate  < b.nextPostDate ? -1 : 1;
+          }
+          return a.id === b.id ? 0 : a.id < b.id ? -1 : 1;
+        });
+        this.schedules = schedules;
       }).catch(err => {
         alert('定期仕訳一覧の取得に失敗しました： ' + err);
       });
