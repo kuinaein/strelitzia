@@ -25,11 +25,11 @@ include /components/mixins
           template(v-if="0 !== a.level") |-
           template {{ a.name }}
         td {{ a.path }}
-  modal(ref="createDlg")
+  modal(ref="editDlg")
     template(slot="title") 資産・負債科目の
       template(v-if="editing.bsAccount.id") 編集
       template(v-else) 追加
-    template(v-if="null === editing.openingBalance") ロード中...
+    template(v-if="null === editing.openingBalance"): +loading
     form(v-else)
       .form-group.row
         label(class=labelClass) 科目名
@@ -131,14 +131,14 @@ export default extendVue({
     },
     create () {
       this.editing = this.$options.data().editing;
-      this.$refs.createDlg.open();
+      this.$refs.editDlg.open();
     },
     edit (id) {
       this.editing = {
         bsAccount: Object.assign({}, this.accountTitleMap[id]),
         openingBalance: null,
       };
-      this.$refs.createDlg.open();
+      this.$refs.editDlg.open();
       axios.get(`${this.apiRoot}/journal/opening/${this.editing.bsAccount.id}`).then(res => {
         this.editing.openingBalance = res.data.data.amount;
       }).catch(() => {
@@ -147,12 +147,12 @@ export default extendVue({
     },
     doSave () {
       const promise = this.editing.bsAccount.id
-        ? axios.put(`${this.apiRoot}/account/bs-account/${this.editing.bsAccount.id}`, this.editing)
-        : axios.post(`${this.apiRoot}/account/bs-account`, this.editing);
+        ? axios.put(`${this.apiRoot}/account/bs/${this.editing.bsAccount.id}`, this.editing)
+        : axios.post(`${this.apiRoot}/account/bs`, this.editing);
       promise.then(() => {
         alert(`勘定科目「${this.editing.bsAccount.name}」を保存しました`);
         this[AccountModule.actionKey.LOAD_ALL]();
-        this.$refs.createDlg.close();
+        this.$refs.editDlg.close();
       }).catch(err => {
         alert(`勘定科目「${this.editing.bsAccount.name}」の保存に失敗しました:  ${err}`);
       });

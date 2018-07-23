@@ -25,7 +25,7 @@ include /components/mixins
           template(v-if="0 !== a.level") |-
           template {{ a.name }}
         td {{ a.path }}
-  modal(ref="createDlg")
+  modal(ref="editDlg")
     template(slot="title") 収益・費用科目の
       template(v-if="editing.plAccount.id") 編集
       template(v-else) 追加
@@ -124,22 +124,22 @@ export default extendVue({
     },
     create () {
       this.editing = this.$options.data().editing;
-      this.$refs.createDlg.open();
+      this.$refs.editDlg.open();
     },
     edit (id) {
       this.editing = {
         plAccount: Object.assign({}, this.accountTitleMap[id]),
       };
-      this.$refs.createDlg.open();
+      this.$refs.editDlg.open();
     },
     doSave () {
       const promise = this.editing.plAccount.id
-        ? axios.put(`${this.apiRoot}/account/pl-account/${this.editing.plAccount.id}`, this.editing)
-        : axios.post(`${this.apiRoot}/account/pl-account`, this.editing);
+        ? axios.put(`${this.apiRoot}/account/pl/${this.editing.plAccount.id}`, this.editing)
+        : axios.post(`${this.apiRoot}/account/pl`, this.editing);
       promise.then(() => {
         alert(`勘定科目「${this.editing.plAccount.name}」を保存しました`);
         this[AccountModule.actionKey.LOAD_ALL]();
-        this.$refs.createDlg.close();
+        this.$refs.editDlg.close();
       }).catch(err => {
         alert(`勘定科目「${this.editing.plAccount.name}」の保存に失敗しました:  ${err}`);
       });

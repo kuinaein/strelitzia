@@ -7,6 +7,12 @@ return [
   'min' => [
     'numeric' => '「:attribute」には「:min」以上の値を入力してください',
   ],
+  'max' => [
+    'numeric' => '「:attribute」には「:max」以下の値を入力してください',
+  ],
+  'between' => [
+    'numeric' => '「:attribute」には「:min」以上「:max」以下の値を入力してください',
+  ],
 
   'attributes' => [
     'name' => '名称',

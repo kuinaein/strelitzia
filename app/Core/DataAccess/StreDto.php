@@ -2,17 +2,20 @@
 
 declare(strict_types=1);
 
-namespace App\Core;
+namespace App\Core\DataAccess;
 
 use App\Exceptions\BadVoSourceException;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class StreDto implements Arrayable, \JsonSerializable {
+  /**
+   * @var string
+   */
   protected static $modelClass;
 
   /**
-   * @var
+   * @var Model
    */
   private $model;
 

@@ -16,6 +16,7 @@ import { router } from '@/app/router';
 import { store } from '@/app/vuex';
 
 import Modal from '@/components/Modal';
+import AccountChooser from '@/components/AccountChooser';
 
 import Frame from '@/app/Frame';
 
@@ -25,10 +26,13 @@ if ('development' === process.env.NODE_ENV) {
     return res;
   }, err => {
     console.error(err);
-    console.error(err.response);
     throw err;
   });
 }
+window.axios.interceptors.response.use(res => res, err => {
+  console.error(err.response);
+  throw err;
+});
 
 window.axios.interceptors.response.use(res => res, err => {
   if (!err.response || !err.response.data) {
@@ -59,6 +63,7 @@ Vue.use(VueI18n);
  */
 
 Vue.component('modal', Modal);
+Vue.component('account-chooser', AccountChooser);
 
 const i18n = new VueI18n({
   locale: 'ja',

@@ -11,8 +11,14 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class AccountingJournalSaveService {
+  /**
+   * @var AccountingJournalDao
+   */
   private $dao;
 
+  /**
+   * @var AccountTitleDao
+   */
   private $accountDao;
 
   public function __construct(

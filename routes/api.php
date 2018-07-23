@@ -17,17 +17,14 @@ use Illuminate\Routing\Router;
 
 Route::group(['prefix' => 'account', 'namespace' => 'Account'], function (Router $router): void {
   $router->resource('/', 'AccountApiController', ['only' => ['index']]);
-  $router->resource('bs-account', 'BsAccountApiController', ['only' => ['store', 'update']]);
-  $router->resource('pl-account', 'PlAccountApiController', ['only' => ['store', 'update']]);
+  $router->resource('bs', 'BsAccountApiController', ['only' => ['store', 'update']]);
+  $router->resource('pl', 'PlAccountApiController', ['only' => ['store', 'update']]);
 });
 
 Route::group(['prefix' => 'journal', 'namespace' => 'Journal'], function (Router $router): void {
   $router->post('trial-balance', 'LedgerApiController@showTrialBalance');
   $router->get('opening/{bsAccountId}', 'LedgerApiController@showOpeningBalance');
   $router->get('ledger/{accountId}/{month}', 'LedgerApiController@index');
-  $router->resource(
-  'ledger/{accountId}/journal',
-  'LedgerApiController',
-  ['only' => ['store', 'update', 'destroy'], 'parameters' => ['journal' => 'journalId']]
-  );
+  $router->resource('schedule', 'ScheduleApiController', ['only' => ['index', 'store', 'update']]);
 });
+Route::resource('journal', 'Journal\JournalApiController', ['only' => ['store', 'update', 'destroy']]);

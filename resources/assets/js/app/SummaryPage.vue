@@ -2,7 +2,7 @@
 include /components/mixins
 
 .container
-  div(v-if="null === accountSummary") 集計中...
+  div(v-if="null === accountSummary"): +loading
   template(v-else)
     .card(v-for="t of AccountTitleType"
         v-if="AccountTitleTypeDesc[t].statements[FinancialStatementType.BALANCE_SHEET]"

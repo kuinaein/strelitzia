@@ -7,6 +7,13 @@
     slot
 </template>
 
+<style scoped>
+.modal-body {
+  overflow-y: auto;
+  max-height: 80vh;
+}
+</style>
+
 <script>
 export default {
   data () {

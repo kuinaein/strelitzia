@@ -7,7 +7,7 @@ include /components/mixins
   h1 [
     span(v-t="'enum.accountType.' + accountTitleMap[accountId].type")
     template ] {{ accountTitleMap[accountId].name }} - {{ month }}
-  p(v-if="null === journals") ロード中...
+  template(v-if="null === journals"): +loading
   template(v-else)
     p.clearfix
       router-link.btn.btn-info.pull-left(
@@ -62,7 +62,7 @@ include /components/mixins
       .form-group.row
         label(class=entryLabelClass) 摘要
         div(class=entryControlClass)
-          input.form-control(v-model="editingEntry.remarks" required)
+          input.form-control(v-model="editingEntry.remarks")
       .form-groupr.row
         label(class=entryLabelClass) 口座
         div(class=entryControlClass)
@@ -70,16 +70,12 @@ include /components/mixins
       .form-group.row
         label(class=entryLabelClass) 相手科目
         div(class=entryControlClass)
-          select.form-control(v-model="editingEntry.anotherAccountId" required)
-            option(v-for="a of accountTitles"
-                v-if="'' === a.systemKey && a.id !== parseInt(accountId)"
-                :value="a.id" :key="'ledger-another-account-' + a.id") [
-              span(v-t="'enum.accountType.' + accountTitleMap[a.id].type")
-              template ]{{ a.name }}
+          account-chooser.form-control(v-model="editingEntry.anotherAccountId"
+              :exclude="accountId" required)
       .form-group.row
         label(class=entryLabelClass) 金額
         div(class=entryControlClass)
-          input.form-control(type="number" v-model="editingEntry.amount" required)
+          input.form-control(type="number" v-model="editingEntry.amount" min="1" required)
       .form-group.row: div.offset-sm-3(class=controlClass)
         button.btn.btn-primary(type="button" @click="doMakeEntry()") 保存
         +modalCloseBtn("キャンセル")
@@ -89,6 +85,7 @@ include /components/mixins
 import moment from 'moment';
 import axios from 'axios';
 
+import { MOMENT_ISO_DATE_FORMAT } from '@/util/lang';
 import { extendVue } from '@/core/vue';
 import { AccountTitleTypeDesc } from '@/account/constants';
 import { AccountModule } from '@/account/AccountModule';
@@ -99,7 +96,7 @@ export default extendVue({
       journals: null,
       editingEntry: {
         id: null,
-        journalDate: moment().format('YYYY-MM-DD'),
+        journalDate: moment().format(MOMENT_ISO_DATE_FORMAT),
         remarks: '',
         anotherAccountId: null,
         amount: '',
@@ -175,8 +172,8 @@ export default extendVue({
         postData.creditAccountId = this.editingEntry.anotherAccountId;
       }
       const promise = this.editingEntry.id
-        ? axios.put(`${this.apiRoot}/journal/ledger/${this.accountId}/journal/${postData.id}`, postData)
-        : axios.post(`${this.apiRoot}/journal/ledger/${this.accountId}/journal`, postData);
+        ? axios.put(`${this.apiRoot}/journal/${postData.id}`, postData)
+        : axios.post(`${this.apiRoot}/journal`, postData);
       promise.then(() => {
         alert('保存しました');
         this.$refs.entryDlg.close();
@@ -208,7 +205,7 @@ export default extendVue({
       if (!confirm(`記帳データ[${journalId}]を削除してもよろしいですか？`)) {
         return;
       }
-      axios.delete(`${this.apiRoot}/journal/ledger/${this.accountId}/journal/${journalId}`).then(() => {
+      axios.delete(`${this.apiRoot}/journal/${journalId}`).then(() => {
         alert(`記帳データ[${journalId}]を削除しました`);
         this.streInit();
       }).catch(err => {
