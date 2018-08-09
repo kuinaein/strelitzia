@@ -20,7 +20,7 @@ import AccountChooser from '@/components/AccountChooser';
 
 import Frame from '@/app/Frame';
 
-if ('development' === process.env.NODE_ENV) {
+if ('production' !== process.env.NODE_ENV) {
   window.axios.interceptors.response.use(res => {
     console.log(res);
     return res;
@@ -70,9 +70,11 @@ const i18n = new VueI18n({
   messages: strings,
 });
 
-window.theApp = new Vue(Object.assign({}, Frame, {
-  el: '#app',
-  router,
-  store,
-  i18n,
-}));
+if ('test' !== process.env.NODE_ENV) {
+  window.theApp = new Vue(Object.assign({}, Frame, {
+    el: '#app',
+    router,
+    store,
+    i18n,
+  }));
+}
