@@ -28,7 +28,7 @@ class JournalScheduleSaveService {
     $s = DB::transaction(function () use ($schedule) {
       return $this->dao->createOrFail($schedule);
     });
-    info('定期仕訳の作成', ['定期仕訳' => $s]);
+    logger()->notice('定期仕訳の作成', ['定期仕訳' => $s]);
     return $s;
   }
 

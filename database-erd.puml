@@ -1,9 +1,9 @@
 @startuml "データベース仕様書"
 
-!define MASTER  yellow
-!define TRAN    aqua
+!define MASTER  <<M, yellow>
+!define TRAN    <<T, aqua>>
 
-entity "account_title (勘定科目)" as account_title <<M, MASTER>> {
+entity "account_title (勘定科目)" as account_title MASTER {
   +id SERIAL [PK]
   name VARCHAR [UQ]
   system_key VARCHAR
@@ -15,7 +15,7 @@ entity "account_title (勘定科目)" as account_title <<M, MASTER>> {
   updated_at TIMESTAMP
 }
 
-entity "accounting_journal (仕訳)" as accounting_journal <<T, TRAN>> {
+entity "accounting_journal (仕訳)" as accounting_journal TRAN {
   +id SERIAL [PK]
   #debit_account_id (借方勘定科目ID) INT [FK]
   #credit_account_id (貸方勘定科目ID) INT [FK]
@@ -29,7 +29,7 @@ entity "accounting_journal (仕訳)" as accounting_journal <<T, TRAN>> {
 }
 account_title ----o{ accounting_journal
 
-entity "journal_schedule (定期仕訳スケジュール)" as journal_schedule <<M, MASTER>> {
+entity "journal_schedule (定期仕訳スケジュール)" as journal_schedule MASTER {
   +id SERIAL [PK]
   #debit_account_id (借方勘定科目ID) INT [FK]
   #credit_account_id (貸方勘定科目ID) INT [FK]

@@ -35,7 +35,7 @@ class PlAccountSaveService {
     $a = DB::transaction(function () use ($plAccount) {
       return $this->dao->save($plAccount);
     });
-    info('収益・費用科目の追加', ['新科目' => $a]);
+    logger()->notice('収益・費用科目の追加', ['新科目' => $a]);
     return $a;
   }
 
@@ -50,7 +50,7 @@ class PlAccountSaveService {
       $this->validate($plAccount, $old);
       $new = $old->fill($plAccount);
       $a = $this->dao->save($new);
-      info('収益・費用科目の更新', ['科目' => $a]);
+      logger()->notice('収益・費用科目の更新', ['科目' => $a]);
       return $a;
     });
   }

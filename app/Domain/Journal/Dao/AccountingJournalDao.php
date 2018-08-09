@@ -57,7 +57,6 @@ class AccountingJournalDao {
     $a = $this->accountDao->findOrFail($accountId);
     $type = new AccountTitleType($a->type);
     $debitSum = $this->sumOneSideForAccount($accountId, $date, 'debit');
-    logger($debitSum);
     $creditSum = $this->sumOneSideForAccount($accountId, $date, 'credit');
     return $type->isDebitSide() ? $debitSum - $creditSum : $creditSum - $debitSum;
   }

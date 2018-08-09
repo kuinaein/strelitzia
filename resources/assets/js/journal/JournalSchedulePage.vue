@@ -4,6 +4,7 @@ include /components/mixins
 - controlClass = 'col-sm-8'
 
 .container
+  h1 定期仕訳
   template(v-if="null === schedules"): +loading
   template(v-else)
     .alert.alert-info(v-if="0 < overdues.length"): ul

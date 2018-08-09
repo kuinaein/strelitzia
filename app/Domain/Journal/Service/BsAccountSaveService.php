@@ -57,7 +57,7 @@ class BsAccountSaveService {
       $this->journalDao->save($j);
       return $a;
     });
-    info('資産・負債科目の追加', ['新科目' => $a]);
+    logger()->notice('資産・負債科目の追加', ['新科目' => $a]);
     return $a;
   }
 
@@ -82,7 +82,7 @@ class BsAccountSaveService {
       $opJournal->amount = $openingBalance;
       $a = $this->dao->save($new);
       $this->journalDao->save($opJournal);
-      info('資産・負債科目の更新', ['科目' => $a]);
+      logger()->notice('資産・負債科目の更新', ['科目' => $a]);
       return $a;
     });
   }
