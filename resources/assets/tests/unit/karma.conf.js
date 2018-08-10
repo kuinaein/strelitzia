@@ -11,11 +11,6 @@ const webpackConfig = merge.smart(mixWebpackConfig, {
       'process.env': '"test"'
     })
   ],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, '../../js'),
-    },
-  },
 });
 delete webpackConfig.entry;
 const commonsChunkPluginIndex = webpackConfig.plugins.findIndex(plugin => plugin.chunkNames);
