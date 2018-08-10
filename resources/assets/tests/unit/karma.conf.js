@@ -27,15 +27,19 @@ module.exports = function(config) {
     files: ['./index.js'],
     preprocessors: { './index.js': ['webpack', 'sourcemap'] },
     reporters: ['spec', 'html', 'coverage'],
-    browsers: ['ChromiumHeadless'],
+    browsers: ['ChromiumHeadless', 'FirefoxHeadless'],
     webpack: webpackConfig,
     htmlReporter: {
-      outputDir: path.resolve(__dirname, '..'),
-      reportName: 'unit-result',
+      outputDir: path.resolve(__dirname, '../unit-result'),
+      namedFiles: true,
+      urlFriendlyName: true,
     },
     coverageReporter: {
-      dir: path.resolve(__dirname, '../unit-result/coverage'),
-      reporters: [{type: 'html', subdir: '.'}],
+      dir: path.resolve(__dirname, '../unit-result'),
+      reporters: [{
+        type: 'html',
+        subdir: browserName => 'cov-' + browserName,
+      }],
     },
   });
 };

@@ -34,7 +34,11 @@ describe('axios', () => {
     const consoleSpy = this.spy(console, 'error');
     axiosMock.onGet().reply(500);
     return axios.get(INVALID_URL).catch(()=>{}).finally(() => {
-      assert(1 <= consoleSpy.callCount);
+      try {
+        assert(1 <= consoleSpy.callCount);
+      } finally {
+        consoleSpy.restore();
+      }
     });
   }));
 
