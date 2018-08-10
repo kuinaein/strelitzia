@@ -1,3 +1,10 @@
 {
-  "plugins": ["babel-plugin-espower"]
+  "env": {
+    "test": {
+      "plugins": [
+        "espower",
+        ["istanbul", {"exclude": "resources/assets/tests"}]
+      ]
+    }
+  }
 }

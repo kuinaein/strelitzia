@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-/* globals sinon, assert */
 import sinonTestFactory from 'sinon-test';
 const sinonTest = sinonTestFactory(sinon);
 

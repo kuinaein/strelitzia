@@ -1,0 +1,5 @@
+env:
+  mocha: true
+globals:
+  sinon: false
+  assert: false

@@ -1,7 +1,5 @@
 const mix = require('laravel-mix');
-
 const path = require('path');
-const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 // const Vue = require('vue');
 // const VueI18n = require('vue-i18n');
@@ -56,11 +54,6 @@ mix.js('resources/assets/js/app.js', 'public/js')
         'vue$': 'vue/dist/vue.runtime.esm.js',
       },
     },
-    plugins: [
-      new CircularDependencyPlugin({
-        exclude: /node_modules/,
-      }),
-    ],
   })
   .vuePug()
   // .vueI18n()
@@ -71,6 +64,14 @@ mix.js('resources/assets/js/app.js', 'public/js')
   .copyDirectory('node_modules/font-awesome/fonts', 'public/fonts');
 
 
-if ('development' === process.env.NODE_ENV) {
-  mix.sourceMaps();
+if ('production' !== process.env.NODE_ENV) {
+  const CircularDependencyPlugin = require('circular-dependency-plugin');
+  mix.sourceMaps()
+    .webpackConfig({
+      plugins: [
+        new CircularDependencyPlugin({
+          exclude: /node_modules/,
+        }),
+      ],
+    });
 }

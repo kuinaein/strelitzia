@@ -5,7 +5,7 @@ const merge = require('webpack-merge');
 const mixWebpackConfig = require('laravel-mix/setup/webpack.config');
 
 const webpackConfig = merge.smart(mixWebpackConfig, {
-  devtool: '#inline-source-map',
+  devtool: 'inline-source-map',
   plugins: [
     new webpack.DefinePlugin({
       'process.env': '"test"'
@@ -26,8 +26,16 @@ module.exports = function(config) {
     frameworks: ['mocha', 'power-assert', 'sinon'],
     files: ['./index.js'],
     preprocessors: { './index.js': ['webpack', 'sourcemap'] },
-    reporters: ['spec'],
-    browsers: ['Chrome'],
+    reporters: ['spec', 'html', 'coverage'],
+    browsers: ['ChromiumHeadless'],
     webpack: webpackConfig,
+    htmlReporter: {
+      outputDir: path.resolve(__dirname, '..'),
+      reportName: 'unit-result',
+    },
+    coverageReporter: {
+      dir: path.resolve(__dirname, '../unit-result/coverage'),
+      reporters: [{type: 'html', subdir: '.'}],
+    },
   });
 };

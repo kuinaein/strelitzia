@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 Artisan::command('stre:deploy', function (): void {
   $this->call('stre:clean');
-  passthru('yarn install');
+  passthru('yarn install --prod');
   passthru('npm run prod');
   $this->call('migrate');
 
