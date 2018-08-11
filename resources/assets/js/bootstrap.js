@@ -1,8 +1,5 @@
-// import _ from 'lodash';
 import jQuery from 'jquery-slim';
 import axios from 'axios';
-
-// window._ = _;
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -13,6 +10,8 @@ import axios from 'axios';
 try {
   window.$ = window.jQuery = jQuery;
 
+  // eslint-disable-next-line no-undef
+  require('babel-polyfill');
   // eslint-disable-next-line no-undef
   require('bootstrap-jquery-slim');
 } catch (e) {

@@ -7,9 +7,7 @@ const mixWebpackConfig = require('laravel-mix/setup/webpack.config');
 const webpackConfig = merge.smart(mixWebpackConfig, {
   devtool: 'inline-source-map',
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': '"test"'
-    })
+    new webpack.DefinePlugin({ 'process.env': '"test"' }),
   ],
 });
 delete webpackConfig.entry;
@@ -18,11 +16,17 @@ webpackConfig.plugins.splice(commonsChunkPluginIndex, 1);
 
 module.exports = function(config) {
   config.set({
+    concurrency: 1,
     frameworks: ['mocha', 'power-assert', 'sinon'],
     files: ['./index.js'],
     preprocessors: { './index.js': ['webpack', 'sourcemap'] },
     reporters: ['spec', 'html', 'coverage'],
-    browsers: ['ChromiumHeadless', 'FirefoxHeadless'],
+    browsers: [
+      'ChromiumHeadless',
+      'FirefoxHeadless',
+      path.resolve(__dirname, './vagrant-ie.sh'),
+      path.resolve(__dirname, './vagrant-edge.sh'),
+    ],
     webpack: webpackConfig,
     htmlReporter: {
       outputDir: path.resolve(__dirname, '../unit-result'),

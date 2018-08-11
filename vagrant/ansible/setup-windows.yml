@@ -1,0 +1,64 @@
+# 1周では言語パックの適用が上手くいかないらしく、2周回す必要がある
+
+- name: WinRMサービスの起動設定を「自動」に変更
+  win_service: name=WinRM start_mode=auto
+- name: i18n設定確認
+  win_reg_stat:
+    path: HKCU:\Control Panel\Desktop
+    name: PreferredUILanguages
+  register: winLang
+  changed_when: false
+- set_fact:
+    doesLanguageSetup: "not winLang.exists or winLang.value[0] != 'ja-JP'"
+- name: 言語パックのダウンロード
+  win_get_url:
+    url: http://download.windowsupdate.com/d/msdownload/update/software/updt/2015/07/lp_adc2ec900dd1c5e94fc0dbd8e010f9baabae665f.cab
+    dest: '{{ work_dir }}\ja-JP.cab'
+    force: no
+    timeout: 60
+  when: doesLanguageSetup
+- name: 言語パックのインストール
+  win_shell: 'dism /Online /Add-Package /PackagePath:{{ work_dir }}\ja-JP.cab'
+  when: doesLanguageSetup
+- name: i18n設定の変更
+  win_shell: C:\vagrant\intl.bat
+  when: doesLanguageSetup
+- name: キーボードレイアウトを日本語に変更
+  win_regedit:
+    path: HKLM:\SYSTEM\CurrentControlSet\Services\i8042prt\Parameters
+    name: '{{ item.name }}'
+    type: '{{ item.type }}'
+    data: '{{ item.data }}'
+  with_items:
+  - name: OverrideKeyboardType
+    type: dword
+    data: 0x7
+  - name: OverrideKeyboardSubtype
+    type: dword
+    data: 0x2
+  - name: OverrideKeyboardIdentifier
+    type: string
+    data: PCAT_106KEY
+  - name: LayerDriver JPN
+    type: string
+    data: kbd106.dll
+  - name: LayerDriver KOR
+    type: string
+    data: kbd101a.dll
+- name: タイムゾーンを東京標準時に変更
+  win_timezone:
+    timezone: Tokyo Standard Time
+# - name: PsToolsのダウンロード
+#   win_get_url:
+#     dest: '{{ work_dir }}\PSTools.zip'
+#     url: http://download.sysinternals.com/files/PSTools.zip
+#     force: no
+# - name: PsToolsの展開
+#   win_unzip:
+#     src: '{{ work_dir }}\PSTools.zip'
+#     dest: '{{ work_dir }}\PSTools'
+#     creates: '{{ work_dir }}\PSTools\PsExec.exe'
+# - name: PsToolsをパスに登録
+#   win_path:
+#     elements:
+#     - '{{ work_dir }}\PSTools'

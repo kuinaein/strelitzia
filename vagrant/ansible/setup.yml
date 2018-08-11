@@ -1,0 +1,12 @@
+- hosts: windows
+  gather_facts: false
+  vars:
+  - work_dir: C:\work
+  tasks:
+  - name: 作業フォルダの作成
+    win_file:
+      path: '{{ work_dir }}'
+      state: directory
+
+  - include: setup-windows.yml
+  - include: setup-testenv.yml

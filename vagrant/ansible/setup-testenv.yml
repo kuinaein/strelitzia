@@ -1,0 +1,29 @@
+- name: Windowsファイアウォールの無効化
+  win_firewall: state=disabled
+- name: Node.jsのダウンロード
+  win_get_url:
+    url: https://nodejs.org/dist/v8.11.3/node-v8.11.3-x64.msi
+    dest: '{{ work_dir }}\node-v8.11.3-x64.msi'
+    force: no
+- name: Node.jsのインストール
+  win_package:
+    path: '{{ work_dir }}\node-v8.11.3-x64.msi'
+    arguments: INSTALLDIR=C:\bin\nodejs
+- name: Yarnのインストール
+  win_shell: C:\bin\nodejs\npm.cmd install -g yarn
+  args:
+    creates: C:\Users\IEUser\AppData\Roaming\npm\yarn.cmd
+- name: テスト環境操作用のexpressプロジェクトをコピー
+  win_copy:
+    src: ../test-server
+    dest: C:\work
+- name: yarn install
+  win_shell: C:\Users\IEUser\AppData\Roaming\npm\yarn.cmd install --prod
+  args:
+    chdir: C:\work\test-server
+- name: テスト環境操作用のサーバーをスタートアップに登録
+  win_shortcut:
+    dest: C:\Users\IEUser\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\test-server.lnk
+    src: npm
+    args: run start
+    directory: C:\work\test-server
