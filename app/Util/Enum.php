@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare (strict_types = 1);
 
 namespace App\Util;
 
@@ -12,33 +11,38 @@ namespace App\Util;
  *
  * @license https://creativecommons.org/publicdomain/zero/1.0/deed.ja CC-0 1.0
  */
-abstract class Enum {
-  private $scalar;
+abstract class Enum
+{
+    private $scalar;
 
-  public function __construct($value) {
-    $ref = new \ReflectionObject($this);
-    $consts = $ref->getConstants();
+    public function __construct($value)
+    {
+        $ref = new \ReflectionObject($this);
+        $consts = $ref->getConstants();
 
-    if (!in_array($value, $consts, true)) {
-      throw new \InvalidArgumentException();
+        if (!in_array($value, $consts, true)) {
+            throw new \InvalidArgumentException();
+        }
+
+        $this->scalar = $value;
     }
 
-    $this->scalar = $value;
-  }
+    final public static function __callStatic($label, $args)
+    {
+        $class = get_called_class();
+        $const = constant("${class}::${label}");
+        return new $class($const);
+    }
 
-  final public static function __callStatic($label, $args) {
-    $class = get_called_class();
-    $const = constant("${class}::${label}");
-    return new $class($const);
-  }
-
-  final public function __toString() {
-    return (string) $this->scalar;
-  }
+    final public function __toString()
+    {
+        return (string)$this->scalar;
+    }
 
   //元の値を取り出すメソッド。
   //メソッド名は好みのものに変更どうぞ
-  final public function valueOf() {
-    return $this->scalar;
-  }
+    final public function valueOf()
+    {
+        return $this->scalar;
+    }
 }

@@ -1,6 +1,7 @@
 env:
   browser: true
   es6: true
+  jquery: true
 extends:
   - 'eslint:recommended'
   - 'plugin:vue/essential'
@@ -9,7 +10,6 @@ parserOptions:
   sourceType: module
 globals:
   process: false
-  jQuery: false
 rules:
   indent:
     - error

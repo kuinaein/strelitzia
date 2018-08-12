@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare (strict_types = 1);
 
 /*
 |--------------------------------------------------------------------------
@@ -11,7 +10,7 @@ declare(strict_types=1);
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+ */
 
 // とりあえす /api とかぶる場合は404にする
 Route::view('/{path}', 'index')->where('path', '^(|[^a].*|a[^p].*)$');

@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare (strict_types = 1);
 
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Handler\StreamHandler;
@@ -17,10 +16,10 @@ use Monolog\Processor\WebProcessor;
 | which serves as the "glue" for all the components of Laravel, and is
 | the IoC container for the system binding all of the various parts.
 |
-*/
+ */
 
 $app = new Illuminate\Foundation\Application(
-  realpath(__DIR__ . '/../')
+    realpath(__DIR__ . '/../')
 );
 
 /*
@@ -32,46 +31,46 @@ $app = new Illuminate\Foundation\Application(
 | we will be able to resolve them when needed. The kernels serve the
 | incoming requests to this application from both the web and CLI.
 |
-*/
+ */
 
 $app->singleton(
-  Illuminate\Contracts\Http\Kernel::class,
-  App\Http\Kernel::class
+    Illuminate\Contracts\Http\Kernel::class,
+    App\Http\Kernel::class
 );
 
 $app->singleton(
-  Illuminate\Contracts\Console\Kernel::class,
-  App\Console\Kernel::class
+    Illuminate\Contracts\Console\Kernel::class,
+    App\Console\Kernel::class
 );
 
 $app->singleton(
-  Illuminate\Contracts\Debug\ExceptionHandler::class,
-  App\Exceptions\Handler::class
+    Illuminate\Contracts\Debug\ExceptionHandler::class,
+    App\Exceptions\Handler::class
 );
 
 $app->configureMonologUsing(function ($monolog) {
-  $levelStr = strtoupper(config('app.log_level'));
-  $level = (new ReflectionClass(Logger::class))->getConstant($levelStr);
+    $levelStr = strtoupper(config('app.log_level'));
+    $level = (new ReflectionClass(Logger::class))->getConstant($levelStr);
 
-  $monolog->pushHandler(new StreamHandler('php://stderr', $level));
-  $monolog->pushHandler(new RotatingFileHandler(
-  storage_path('logs/strelitzia.log'),
-  config('app.log_max_files'),
-  $level
-  ));
+    $monolog->pushHandler(new StreamHandler('php://stderr', $level));
+    $monolog->pushHandler(new RotatingFileHandler(
+        storage_path('logs/strelitzia.log'),
+        config('app.log_max_files'),
+        $level
+    ));
 
   // クラス名等を extra フィールドに挿入するプロセッサを生成
-  $ip = new IntrospectionProcessor(Logger::DEBUG, ['Illuminate\\']);
+    $ip = new IntrospectionProcessor(Logger::DEBUG, ['Illuminate\\']);
 
   // IPアドレス等を extra フィールドに挿入するプロセッサを生成
-  $wp = new WebProcessor();
+    $wp = new WebProcessor();
 
-  foreach ($monolog->getHandlers() as $handler) {
-    $handler->pushProcessor($ip);
-    $handler->pushProcessor($wp);
-  }
+    foreach ($monolog->getHandlers() as $handler) {
+        $handler->pushProcessor($ip);
+        $handler->pushProcessor($wp);
+    }
 
-  return $monolog;
+    return $monolog;
 });
 
 /*
@@ -83,6 +82,6 @@ $app->configureMonologUsing(function ($monolog) {
 | the calling script so we can separate the building of the instances
 | from the actual running of the application and sending responses.
 |
-*/
+ */
 
 return $app;

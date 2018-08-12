@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types = 1);
+declare (strict_types = 1);
 
 namespace App\Domain\Account\Dto;
 
@@ -18,6 +17,7 @@ use App\Domain\Account\Model\AccountTitleModel;
  * @property-read string $createdAt
  * @property-read string $updatedAt
  */
-class AccountTitle extends StreDto {
-  protected static $modelClass = AccountTitleModel::class;
+class AccountTitle extends StreDto
+{
+    protected static $modelClass = AccountTitleModel::class;
 }
