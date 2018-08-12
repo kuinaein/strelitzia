@@ -12,3 +12,4 @@ yarn-error.log
 .env
 
 .php_cs.cache
+/nbproject/private/

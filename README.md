@@ -19,7 +19,7 @@
 1. PostgreSQL でユーザー `strelitzia`、データベース `strelitzia` を作成する。（DB名等は `.env` で変更可能）<br/>
 `CREATE USER strelitzia WITH ENCRYPTED PASSWORD 'strelitzia';`<br/>
 `CREATE DATABASE strelitzia WITH OWNER strelitzia ENCODING 'UTF8' LC_COLLATE 'C' LC_CTYPE 'C' TEMPLATE template0;`
-1. `composer install` を実行する。
+1. `composer install --no-dev` を実行する。
 1. `php artisan key:generate` を実行する。
 1. `php artisan stre:install` を実行する。
 
@@ -31,6 +31,7 @@
 ## アップデート
 1. データベースのバックアップを取る。<br/>
 `pg_dump -U strelitzia -b -Fc > storage/app/pg_dump`
+1. `composer install --no-dev` を再度実行する。
 1. `php artisan stre:update` を実行する。
 
 ## アンインストール

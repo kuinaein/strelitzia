@@ -220,21 +220,21 @@ export default extendVue({
         }).then(res => {
           savedIds.push(res.data.data.id);
           // 「次の仕訳日」の更新
-          const newScheule = Object.assign({}, schedule);
+          const newSchedule = Object.assign({}, schedule);
           const prevPostDate = moment(schedule.nextPostDate);
           if (10 > prevPostDate.date() && 20 < schedule.postDate) {
             // 月末払いのものを翌月頭に先送りしたケースとする
-            newScheule.nextPostDate = prevPostDate.date(schedule.postDate)
+            newSchedule.nextPostDate = prevPostDate.date(schedule.postDate)
               .format(MOMENT_ISO_DATE_FORMAT);
           } else if (20 < prevPostDate.date() && 10 > schedule.postDate) {
             // 月初払いのものを前月末に前倒ししたケースとする
-            newScheule.nextPostDate = prevPostDate.add(2, 'months')
+            newSchedule.nextPostDate = prevPostDate.add(2, 'months')
               .date(schedule.postDate).format(MOMENT_ISO_DATE_FORMAT);
           } else {
-            newScheule.nextPostDate = prevPostDate.add(1, 'month')
+            newSchedule.nextPostDate = prevPostDate.add(1, 'month')
               .date(schedule.postDate).format(MOMENT_ISO_DATE_FORMAT);
           }
-          return axios.put(`${this.apiRoot}/journal/schedule/${newScheule.id}`, newScheule);
+          return axios.put(`${this.apiRoot}/journal/schedule/${newSchedule.id}`, newSchedule);
         });
       }
       return promise.then(() => savedIds);

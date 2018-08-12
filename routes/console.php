@@ -61,9 +61,3 @@ Artisan::command('stre:dev', function (): void {
   sleep(1);
   passthru('xdg-open ' . config('app.url'));
 })->describe('開発環境として起動');
-
-Artisan::command('stre:cs', function (): void {
-  @unlink(base_path('.php_cs.cache'));
-  passthru(base_path('vendor/bin/php-cs-fixer') . ' fix');
-  passthru('npm run lint-fix');
-})->describe('lintとコード整形');
