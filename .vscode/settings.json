@@ -1,6 +1,6 @@
 {
   "editor.formatOnSave": true,
-  "vetur.format.defaultFormatter.js": "vscode-typescript",
+  "prettier.eslintIntegration": true,
   "eslint.validate": [
     "javascript",
     "javascriptreact",

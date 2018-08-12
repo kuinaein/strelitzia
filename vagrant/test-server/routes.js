@@ -17,7 +17,9 @@ router.get('/run-tests/edge', (req, res, next) => {
 router.get('/cleanup', (req, res, next) => {
   spawnSync('taskkill', ['/im', 'iexplore.exe', '/f']);
   spawnSync('cscript', ['//b', 'C:\\vagrant\\kill-edge.wsf']);
-  rimraf.sync('C:\\Users\\IEUser\\AppData\\Local\\Microsoft\\Internet Explorer\\Recovery\\*');
+  rimraf.sync(
+    'C:\\Users\\IEUser\\AppData\\Local\\Microsoft\\Internet Explorer\\Recovery\\*'
+  );
   res.send('OK');
 });
 

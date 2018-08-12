@@ -8,7 +8,7 @@ var app = express();
 
 // view は不要
 app.set('view engine', 'html');
-app.engine('html',()=>{});
+app.engine('html', () => {});
 
 // app.use(logger('dev'));
 app.use(express.json());

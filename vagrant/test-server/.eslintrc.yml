@@ -1,0 +1,6 @@
+env:
+  node: true
+rules:
+  linebreak-style:
+    - error
+    - windows
