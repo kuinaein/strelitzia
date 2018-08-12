@@ -1,6 +1,6 @@
 @startuml "データベース仕様書"
 
-!define MASTER  <<M, yellow>
+!define MASTER  <<M, yellow>>
 !define TRAN    <<T, aqua>>
 
 entity "account_title (勘定科目)" as account_title MASTER {
