@@ -1,13 +1,10 @@
 <?php
-
-declare(strict_types=1);
+declare (strict_types = 1);
 
 namespace App\Domain\Journal\Model;
 
-use Illuminate\Database\Eloquent\Model;
-
-class AccountingJournalModel extends Model {
-  protected $table = 'accounting_journal';
-
-  protected $guarded = ['id', Model::UPDATED_AT, MODEL::CREATED_AT];
+class AccountingJournalModel extends \Eloquent
+{
+    protected $table = 'accounting_journal';
+    protected $guarded = ['id', \Eloquent::UPDATED_AT, \Eloquent::CREATED_AT];
 }
