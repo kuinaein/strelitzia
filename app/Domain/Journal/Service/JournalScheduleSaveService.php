@@ -51,7 +51,7 @@ class JournalScheduleSaveService
     private function validate(JournalSchedule $schedule, JournalSchedule $old = null) : void
     {
         $ar = $schedule->toArray();
-        $validator = \Validator::make($ar, [
+        \Validator::make($ar, [
             'postDate' => 'required|numeric|between:1,28',
             'debitAccountId' => 'required|numeric|min:1',
             'creditAccountId' => 'required|numeric|min:1',

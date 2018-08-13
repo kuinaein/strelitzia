@@ -58,7 +58,7 @@ abstract class StreDto implements Arrayable, \JsonSerializable
 
     public function __set(string $name, $value)
     {
-        return $this->unwrap()->{snake_case($name)} = $value;
+        $this->unwrap()->{snake_case($name)} = $value;
     }
 
     public function unwrap() : Model

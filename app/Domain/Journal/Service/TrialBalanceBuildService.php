@@ -7,7 +7,10 @@ use App\Domain\Journal\Dao\AccountingJournalDao;
 
 class TrialBalanceBuildService
 {
-    private $jorunalDao;
+    /**
+     * @var AccountingJournalDao
+     */
+    private $journalDao;
 
     public function __construct(AccountingJournalDao $journalDao)
     {
@@ -16,7 +19,7 @@ class TrialBalanceBuildService
 
     /**
      * @param \App\Domain\Account\Dto\AccountTitleType[] $accountTypes
-     * @return array[int=>int]
+     * @return array<int, int>
      */
     public function build(array $accountTypes) : array
     {

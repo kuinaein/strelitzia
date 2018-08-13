@@ -22,8 +22,6 @@ class PlAccountApiController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
      */
     public function store(Request $request) : array
     {
@@ -37,7 +35,6 @@ class PlAccountApiController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param int                      $id
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, int $id) : array
     {

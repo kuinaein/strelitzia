@@ -45,7 +45,7 @@ class AccountingJournalDao
      * @param int    $accountId
      * @param Carbon $startInclusive
      * @param Carbon $endExclusive
-     * @return AccountingJournal[]
+     * @return Collection<AccountingJournal>
      */
     public function listByAccountIdAndPeriod(int $accountId, Carbon $startInclusive, Carbon $endExclusive) : Collection
     {
@@ -78,7 +78,7 @@ class AccountingJournalDao
 
     /**
      * @param \App\Domain\Account\Dto\AccountTitleType[] $accountTypes
-     * @return array[int=>int] accountId => 金額
+     * @return array<int, int> accountId => 金額
      */
     public function buildTrialBalance(array $accountTypes) : array
     {
@@ -115,13 +115,17 @@ class AccountingJournalDao
             ->get()[0]->balance ?? 0;
     }
 
+    /**
+     * @suppress PhanTypeMismatchArgument _ide_helper の groupBy() の定義がおかしい...
+     * @suppress PhanParamTooMany 同上
+     */
     private function sumOneSideForTypes(array $accountTypes, string $side) : Collection
     {
-        return $this->repo->select(
+        return $this->repo->select([
             'account_title.type',
             'account_title.id',
             \DB::raw('sum(accounting_journal.amount) as amount')
-        )
+        ])
             ->join('account_title', 'accounting_journal.' . $side . '_account_id', '=', 'account_title.id')
             ->whereIn('account_title.type', $accountTypes)
             ->groupBy('account_title.type', 'account_title.id')

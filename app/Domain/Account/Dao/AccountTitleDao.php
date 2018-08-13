@@ -21,7 +21,7 @@ class AccountTitleDao
     }
 
     /**
-     * @return AccountTitle[]
+     * @return Collection<AccountTitle>
      */
     public function all() : Collection
     {
@@ -37,6 +37,6 @@ class AccountTitleDao
 
     public function findOrFailBySystemKey(SystemAccountTitleKey $key) : AccountTitle
     {
-        return new AccountTitle($this->repo->where('system_key', $key)->firstOrFail());
+        return new AccountTitle($this->repo->where('system_key', '=', $key)->firstOrFail());
     }
 }

@@ -60,3 +60,9 @@ Artisan::command('stre:dev', function () : void {
     sleep(1);
     passthru('xdg-open ' . config('app.url'));
 })->describe('開発環境として起動');
+
+Artisan::command('stre:cs', function () {
+    passthru(base_path('vendor/bin/phan -p'));
+    passthru('npm run lint-fix');
+    // PHP のコード整形は VS Code でしかできていない...
+})->describe('lint, 静的解析とコード整形');

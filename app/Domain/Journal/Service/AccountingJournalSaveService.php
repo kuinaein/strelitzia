@@ -68,7 +68,7 @@ class AccountingJournalSaveService
     private function validate(AccountingJournal $journal, AccountingJournal $old = null) : void
     {
         $ar = $journal->toArray();
-        $validator = \Validator::make($ar, [
+        \Validator::make($ar, [
             'journalDate' => 'required|date',
             'debitAccountId' => 'required|numeric|min:1',
             'creditAccountId' => 'required|numeric|min:1',

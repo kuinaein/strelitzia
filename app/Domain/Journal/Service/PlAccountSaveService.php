@@ -62,7 +62,7 @@ class PlAccountSaveService
     private function validate(PlAccount $plAccount, PlAccount $old = null) : void
     {
         $ar = $plAccount->toArray();
-        $validator = \Validator::make($ar, [
+        \Validator::make($ar, [
             'name' => 'required',
         ])->validate();
     }

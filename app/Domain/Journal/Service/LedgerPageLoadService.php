@@ -8,7 +8,10 @@ use Illuminate\Support\Carbon;
 
 class LedgerPageLoadService
 {
-    private $jorunalDao;
+    /**
+     * @var AccountingJournalDao
+     */
+    private $journalDao;
 
     public function __construct(AccountingJournalDao $journalDao)
     {
@@ -16,7 +19,6 @@ class LedgerPageLoadService
     }
 
     /**
-     * @param
      * @param int    $accountId
      * @param Carbon $startInclusive
      * @param Carbon $endExclusive

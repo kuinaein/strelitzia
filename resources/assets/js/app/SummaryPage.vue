@@ -45,7 +45,7 @@ export default extendVue({
   methods: {
     streInit () {
       axios.post(this.apiRoot + '/journal/trial-balance', {
-        accountTypes: [AccountTitleType.ASSET, AccountTitleType.LIABILITY, AccountTitleType.NET_ASSET]
+        accountTypes: [AccountTitleType.ASSET, AccountTitleType.LIABILITY, AccountTitleType.NET_ASSET],
       }).then(res => {
         const data = res.data.data;
         const accountSummary = {
@@ -55,7 +55,7 @@ export default extendVue({
         };
         for (const accountId in data) {
           accountSummary[this.accountTitleMap[accountId].type].push({
-            accountId, amount: data[accountId]
+            accountId, amount: data[accountId],
           });
         }
         for (const s of Object.values(accountSummary)) {

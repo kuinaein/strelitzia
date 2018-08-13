@@ -87,14 +87,14 @@ class BsAccountSaveService
 
     /**
      * @param BsAccount      $bsAccount
-     * @param null|BsAccount $old
      * @param int            $openingBalance
+     * @param null|BsAccount $old
      */
     private function validate(BsAccount $bsAccount, int $openingBalance, BsAccount $old = null) : void
     {
         $ar = $bsAccount->toArray();
         $ar['openingBalance'] = $openingBalance;
-        $validator = \Validator::make($ar, [
+        \Validator::make($ar, [
             'name' => 'required',
             'openingBalance' => 'numeric|required|min:0',
         ])

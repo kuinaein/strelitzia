@@ -6,6 +6,7 @@ namespace App\Core\DataAccess;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
+// TODO phan上はテンプレートにしたい...
 abstract class StreDao
 {
     /**
@@ -24,7 +25,7 @@ abstract class StreDao
     }
 
     /**
-     * @return static::$dtoClass[]
+     * @return Collection<StreDto>
      */
     public function all() : Collection
     {
@@ -35,7 +36,8 @@ abstract class StreDao
 
     /**
      * @param mixed $id
-     * @return static::$dtoClass
+     * @return StreDto
+     * @phan-return mixed
      */
     public function findOrFail($id)
     {
@@ -54,6 +56,8 @@ abstract class StreDao
     /**
      * @param StreDto $dto
      * @return StreDto
+     * @phan-param mixed $dto
+     * @phan-return mixed
      */
     public function updateOrFail($dto)
     {

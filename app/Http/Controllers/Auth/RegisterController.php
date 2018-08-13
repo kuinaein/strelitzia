@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use App\Domain\Auth\Model\UserModel;
 
 class RegisterController extends Controller
 {
@@ -55,11 +56,11 @@ class RegisterController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param array $data
-     * @return \App\User
+     * @return UserModel
      */
-    protected function create(array $data)
+    protected function create(array $data) : UserModel
     {
-        return User::create([
+        return UserModel::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),

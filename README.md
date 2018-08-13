@@ -45,7 +45,7 @@
 データベースとディレクトリを削除すれば OK です。
 レジストリなどは利用していません。
 
-## テスト用仮想環境の構築
+## MSEdge テスト用仮想環境の構築
 
 1. Vagrant、VirtualBox と Ansible (要 python-pywinrm) をインストールしておく。
 1. [Free Virtual Machines from IE8 to MS Edge - Microsoft Edge Development](https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/) から Vagrant 用の box をダウンロード及び解凍する。

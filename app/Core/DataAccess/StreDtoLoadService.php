@@ -18,7 +18,7 @@ abstract class StreDtoLoadService
     }
 
     /**
-     * @return StreDto[]
+     * @return Collection<StreDto>
      */
     public function all() : Collection
     {
