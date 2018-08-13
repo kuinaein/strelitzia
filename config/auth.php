@@ -1,6 +1,8 @@
 <?php
 declare (strict_types = 1);
 
+use App\Domain\Auth\Model\UserModel;
+
 return [
   /*
   |--------------------------------------------------------------------------
@@ -67,7 +69,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\User::class,
+            'model' => UserModel::class,
         ],
 
     // 'users' => [

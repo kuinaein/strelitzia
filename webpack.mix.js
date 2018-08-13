@@ -1,3 +1,4 @@
+/* eslint-env node */
 const mix = require('laravel-mix');
 const path = require('path');
 
@@ -24,7 +25,7 @@ mix.extend('vuePug', (webpackConfig, ...args) => {
     rule.options.loaders.pug = {
       loader: 'pug-html-loader',
       options: { basedir: path.resolve(__dirname, 'resources/assets/js') },
-    }
+    };
   }
 });
 
@@ -45,13 +46,14 @@ mix.extend('vuePug', (webpackConfig, ...args) => {
 //   }
 // });
 
-mix.js('resources/assets/js/app.js', 'public/js')
+mix
+  .js('resources/assets/js/app.js', 'public/js')
   .webpackConfig({
     resolve: {
       extensions: ['.js', '.json', '.vue'],
       alias: {
         '@': path.resolve(__dirname, 'resources/assets/js'),
-        'vue$': 'vue/dist/vue.runtime.esm.js',
+        vue$: 'vue/dist/vue.runtime.esm.js',
       },
     },
   })
@@ -63,15 +65,13 @@ mix.js('resources/assets/js/app.js', 'public/js')
   })
   .copyDirectory('node_modules/font-awesome/fonts', 'public/fonts');
 
-
 if ('production' !== process.env.NODE_ENV) {
   const CircularDependencyPlugin = require('circular-dependency-plugin');
-  mix.sourceMaps()
-    .webpackConfig({
-      plugins: [
-        new CircularDependencyPlugin({
-          exclude: /node_modules/,
-        }),
-      ],
-    });
+  mix.sourceMaps().webpackConfig({
+    plugins: [
+      new CircularDependencyPlugin({
+        exclude: /node_modules/,
+      }),
+    ],
+  });
 }

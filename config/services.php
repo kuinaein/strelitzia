@@ -1,6 +1,8 @@
 <?php
 declare (strict_types = 1);
 
+use App\Domain\Auth\Model\UserModel;
+
 return [
   /*
   |--------------------------------------------------------------------------
@@ -30,7 +32,7 @@ return [
     ],
 
     'stripe' => [
-        'model' => App\User::class,
+        'model' => UserModel::class,
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],

@@ -5,27 +5,14 @@ namespace App\Domain\Account\Dao;
 
 use App\Domain\Account\Dto\PlAccount;
 use App\Domain\Account\Model\AccountTitleModel;
+use App\Core\DataAccess\StreDao;
 
-class PlAccountDao
+class PlAccountDao extends StreDao
 {
-    /**
-     * @var AccountTitleModel
-     */
-    private $repo;
+    protected static $dtoClass = PlAccount::class;
 
     public function __construct(AccountTitleModel $repo)
     {
-        $this->repo = $repo;
-    }
-
-    public function findOrFail(int $id) : PlAccount
-    {
-        return new PlAccount($this->repo->findOrFail($id));
-    }
-
-    public function save(PlAccount $plAccount) : PlAccount
-    {
-        $plAccount->unwrap()->save();
-        return $plAccount;
+        parent::__construct($repo);
     }
 }

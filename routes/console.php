@@ -62,24 +62,27 @@ Artisan::command('stre:dev', function () : void {
 })->describe('開発環境として起動');
 
 Artisan::command('stre:cs', function () {
-    $srcDirs = [
-        app_path(),
-        base_path('tests'),
-        base_path('routes'),
-        config_path(),
-        database_path(),
-    ];
-
     passthru(base_path('vendor/bin/phpcbf') . ' --standard=' . base_path('phpcs.xml'));
     passthru(base_path('vendor/bin/phpcs') . ' --standard=' . base_path('phpcs.xml'));
     passthru(base_path('vendor/bin/phan') . ' -p');
 
     $buf = [];
     $this->info('PHPMD 実行中...');
-    exec(base_path('vendor/bin/phpmd ') . implode($srcDirs, ',') . ' html ' . base_path('phpmd.xml'), $buf);
+    exec(base_path('vendor/bin/phpmd ') . implode([
+        app_path(),
+        base_path('tests'),
+        base_path('routes'),
+        config_path(),
+        database_path(),
+    ], ',') . ' html ' . base_path('phpmd.xml'), $buf);
     file_put_contents(base_path('phpmd-result.html'), $buf);
     exec('xdg-open ' . base_path('phpmd-result.html'));
 
-    passthru(base_path('vendor/bin/phpcpd') . ' ' . implode($srcDirs, ' '));
+    passthru(base_path('vendor/bin/phpcpd') . ' --min-tokens 30 ' . implode([
+        app_path(),
+        base_path('tests'),
+        base_path('routes'),
+        config_path(),
+    ], ' '));
     passthru('npm run lint-fix');
 })->describe('lint, 静的解析とコード整形');

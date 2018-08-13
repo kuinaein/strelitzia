@@ -43,7 +43,7 @@ class BsAccountSaveService
             new SystemAccountTitleKey(SystemAccountTitleKey::OPENING_BALANCE)
         );
         $a = \DB::transaction(function () use ($bsAccount, $openingBalance, $op) {
-            $a = $this->dao->save($bsAccount);
+            $a = $this->dao->createOrFail($bsAccount);
             $isAsset = $bsAccount->type === AccountTitleType::ASSET;
             $j = new AccountingJournal();
       // MySQLのDATE型の最小値は1000-01-01なので一応そちらに合わせておく
@@ -78,7 +78,7 @@ class BsAccountSaveService
             $this->validate($bsAccount, $openingBalance, $old);
             $new = $old->fill($bsAccount);
             $opJournal->amount = $openingBalance;
-            $a = $this->dao->save($new);
+            $a = $this->dao->updateOrFail($new);
             $this->journalDao->save($opJournal);
             logger()->notice('資産・負債科目の更新', ['科目' => $a]);
             return $a;

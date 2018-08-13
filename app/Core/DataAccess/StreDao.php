@@ -3,7 +3,6 @@ declare (strict_types = 1);
 
 namespace App\Core\DataAccess;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 // TODO phan上はテンプレートにしたい...
@@ -15,13 +14,21 @@ abstract class StreDao
     protected static $dtoClass;
 
     /**
-     * @var Model
+     * @var \Eloquent
      */
     private $repo;
 
-    protected function __construct(Model $repo)
+    protected function __construct(\Eloquent $repo)
     {
         $this->repo = $repo;
+    }
+
+    /**
+     * @return \Eloquent
+     */
+    protected function repo()
+    {
+        return $this->repo;
     }
 
     /**

@@ -17,7 +17,7 @@
     <exclude name="CouplingBetweenObjects" />
   </rule>
   <rule ref="rulesets/design.xml/CouplingBetweenObjects">
-    <properties><property name="minimum" value="30" /></properties>
+    <properties><property name="minimum" value="20" /></properties>
   </rule>
   <rule ref="rulesets/unusedcode.xml">
     <exclude name="UnusedFormalParameter" /><!-- 継承メソッドにも反応してしまうのでパス -->

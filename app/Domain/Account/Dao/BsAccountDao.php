@@ -3,29 +3,16 @@ declare (strict_types = 1);
 
 namespace App\Domain\Account\Dao;
 
+use App\Core\DataAccess\StreDao;
 use App\Domain\Account\Dto\BsAccount;
 use App\Domain\Account\Model\AccountTitleModel;
 
-class BsAccountDao
+class BsAccountDao extends StreDao
 {
-    /**
-     * @var AccountTitleModel
-     */
-    private $repo;
+    protected static $dtoClass = BsAccount::class;
 
     public function __construct(AccountTitleModel $repo)
     {
-        $this->repo = $repo;
-    }
-
-    public function findOrFail(int $id) : BsAccount
-    {
-        return new BsAccount($this->repo->findOrFail($id));
-    }
-
-    public function save(BsAccount $bsAccount) : BsAccount
-    {
-        $bsAccount->unwrap()->save();
-        return $bsAccount;
+        parent::__construct($repo);
     }
 }
