@@ -6,12 +6,12 @@ const mixWebpackConfig = require('laravel-mix/setup/webpack.config');
 
 const webpackConfig = merge.smart(mixWebpackConfig, {
   devtool: 'inline-source-map',
-  plugins: [
-    new webpack.DefinePlugin({ 'process.env': '"test"' }),
-  ],
+  plugins: [new webpack.DefinePlugin({ 'process.env': '"test"' })],
 });
 delete webpackConfig.entry;
-const commonsChunkPluginIndex = webpackConfig.plugins.findIndex(plugin => plugin.chunkNames);
+const commonsChunkPluginIndex = webpackConfig.plugins.findIndex(
+  plugin => plugin.chunkNames
+);
 webpackConfig.plugins.splice(commonsChunkPluginIndex, 1);
 
 module.exports = function(config) {
@@ -19,7 +19,9 @@ module.exports = function(config) {
     concurrency: 1,
     frameworks: ['mocha', 'power-assert', 'sinon'],
     files: ['./index.js'],
-    preprocessors: { './index.js': ['webpack', 'sourcemap'] },
+    preprocessors: {
+      './index.js': ['webpack', 'sourcemap'],
+    },
     reporters: ['spec', 'html', 'coverage'],
     browsers: [
       'ChromiumHeadless',
@@ -27,6 +29,7 @@ module.exports = function(config) {
       path.resolve(__dirname, './vagrant-ie.sh'),
       path.resolve(__dirname, './vagrant-edge.sh'),
     ],
+    captureTimeout: 5 * 60 * 1000, // 5分
     webpack: webpackConfig,
     htmlReporter: {
       outputDir: path.resolve(__dirname, '../unit-result'),
@@ -35,10 +38,12 @@ module.exports = function(config) {
     },
     coverageReporter: {
       dir: path.resolve(__dirname, '../unit-result'),
-      reporters: [{
-        type: 'html',
-        subdir: browserName => 'cov-' + browserName,
-      }],
+      reporters: [
+        {
+          type: 'html',
+          subdir: browserName => 'cov-' + browserName,
+        },
+      ],
     },
   });
 };

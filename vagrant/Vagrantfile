@@ -12,7 +12,8 @@ Vagrant.configure('2') do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  config.vm.box = 'Microsoft/EdgeOnWindows10'
+  # config.vm.box = 'Microsoft/EdgeOnWindows10'
+  config.vm.box = 'Microsoft/EdgeOnWindows10-17134'
 
   config.vm.guest = :windows
   config.vm.communicator = 'winrm'
@@ -56,6 +57,8 @@ Vagrant.configure('2') do |config|
   # Example for VirtualBox:
 
   config.vm.provider 'virtualbox' do |vb|
+    vb.name = 'strelitzia-test-edge'
+
     # Display the VirtualBox GUI when booting the machine
     # vb.gui = true
 
@@ -64,10 +67,11 @@ Vagrant.configure('2') do |config|
 
     vb.customize [
       'modifyvm', :id,
+      '--vrde', 'off',  # リモートディスプレイの無効化 (有効にする場合は Extention Pack が必要)
       '--vram', '128',
       '--clipboard', 'bidirectional', # クリップボードの共有
       '--paravirtprovider', 'hyperv',
-      # うちの子と相性が悪いのかまともに起動しないので除外
+      # うちの子と相性が悪いのか、ホストを巻き込んで固まるので除外
       # '--accelerate3d', 'on',
       '--accelerate2dvideo', 'on',
     ]

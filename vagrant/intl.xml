@@ -8,10 +8,12 @@
 </gs:LocationPreferences>
 
 <!-- 言語パック -->
+<!--
 <gs:MUILanguagePreferences>
   <gs:MUILanguage Value="ja-JP"/>
   <gs:MUIFallback Value="en-US"/>
 </gs:MUILanguagePreferences>
+-->
 
 <gs:SystemLocale Name="ja-JP"/>
 <gs:InputPreferences>

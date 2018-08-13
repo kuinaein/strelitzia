@@ -1,10 +1,11 @@
 <job id="main">
-<script language="JScript">
-(function () {
-  var wshShell = WScript.CreateObject('WScript.Shell');
-  wshShell.Run('http://www.google.com/');
-  WScript.Sleep(300);
-  wshShell.SendKeys('%{F4}');
-})();
-</script>
+  <script language="JScript">
+    (function () {
+      var wshShell = WScript.CreateObject('WScript.Shell');
+      wshShell.Run('http://www.google.com/');
+      WScript.Sleep(300);
+      wshShell.SendKeys('%{F4}');
+      WScript.Sleep(1000);
+    })();
+  </script>
 </job>
