@@ -18,6 +18,7 @@ use App\Domain\Journal\Model\AccountingJournalModel;
  * @property-read string $createdAt
  * @property-read string $updatedAt
  */
-class AccountingJournal extends StreDto {
-  protected static $modelClass = AccountingJournalModel::class;
+class AccountingJournal extends StreDto
+{
+    protected static $modelClass = AccountingJournalModel::class;
 }

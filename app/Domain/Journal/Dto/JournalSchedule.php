@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare (strict_types = 1);
 
 namespace App\Domain\Journal\Dto;
 
@@ -19,6 +19,7 @@ use App\Domain\Journal\Model\JournalScheduleModel;
  * @property-read string $createdAt
  * @property-read string $updatedAt
  */
-class JournalSchedule extends StreDto {
-  protected static $modelClass = JournalScheduleModel::class;
+class JournalSchedule extends StreDto
+{
+    protected static $modelClass = JournalScheduleModel::class;
 }

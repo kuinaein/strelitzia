@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ruleset name="Custom_PSR2">
+<file>./app</file>
+<file>./tests</file>
+<file>./routes</file>
+<file>./config</file>
+<file>./database</file>
+<rule ref="PSR2" />
+<rule ref="PSR1.Classes.ClassDeclaration">
+  <exclude-pattern>*/strelitzia/database/*</exclude-pattern>
+</rule>
+</ruleset>

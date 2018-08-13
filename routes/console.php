@@ -62,7 +62,24 @@ Artisan::command('stre:dev', function () : void {
 })->describe('開発環境として起動');
 
 Artisan::command('stre:cs', function () {
-    passthru(base_path('vendor/bin/phan -p'));
+    $srcDirs = [
+        app_path(),
+        base_path('tests'),
+        base_path('routes'),
+        config_path(),
+        database_path(),
+    ];
+
+    passthru(base_path('vendor/bin/phpcbf') . ' --standard=' . base_path('phpcs.xml'));
+    passthru(base_path('vendor/bin/phpcs') . ' --standard=' . base_path('phpcs.xml'));
+    passthru(base_path('vendor/bin/phan') . ' -p');
+
+    $buf = [];
+    $this->info('PHPMD 実行中...');
+    exec(base_path('vendor/bin/phpmd ') . implode($srcDirs, ',') . ' html ' . base_path('phpmd.xml'), $buf);
+    file_put_contents(base_path('phpmd-result.html'), $buf);
+    exec('xdg-open ' . base_path('phpmd-result.html'));
+
+    passthru(base_path('vendor/bin/phpcpd') . ' ' . implode($srcDirs, ' '));
     passthru('npm run lint-fix');
-    // PHP のコード整形は VS Code でしかできていない...
 })->describe('lint, 静的解析とコード整形');

@@ -9,7 +9,9 @@ return [
     // ディレクトリとの差分が解析チェックの対象となる
     'directory_list' => [
         'app',
+        'tests',
         'routes',
+        'config',
         'database',
         'resources/php-stub',
         'vendor',

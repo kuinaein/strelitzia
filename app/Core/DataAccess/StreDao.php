@@ -35,13 +35,13 @@ abstract class StreDao
     }
 
     /**
-     * @param mixed $id
+     * @param mixed $dtoId
      * @return StreDto
      * @phan-return mixed
      */
-    public function findOrFail($id)
+    public function findOrFail($dtoId)
     {
-        return new static::$dtoClass($this->repo->findOrFail($id));
+        return new static::$dtoClass($this->repo->findOrFail($dtoId));
     }
 
     /**

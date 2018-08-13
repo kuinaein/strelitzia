@@ -99,8 +99,12 @@ class AccountingJournalDao
         return $result;
     }
 
-    private function listOneSide(int $accountId, Carbon $startInclusive, Carbon $endExclusive, string $side) : Collection
-    {
+    private function listOneSide(
+        int $accountId,
+        Carbon $startInclusive,
+        Carbon $endExclusive,
+        string $side
+    ) : Collection {
         return $this->repo->where([$side . '_account_id' => $accountId])
             ->where('journal_date', '>=', $startInclusive)
             ->where('journal_date', '<', $endExclusive)
