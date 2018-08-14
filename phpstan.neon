@@ -1,0 +1,18 @@
+parameters:
+  level: 7
+  paths:
+    - app
+    - tests
+    - routes
+    - config
+    - database
+  autoload_directories:
+    - database
+  autoload_files:
+    - resources/php-stub/_ide_helper.php
+  ignoreErrors:
+    - '#Using \$this outside a class.#' # クロージャーの $this に誤反応するのでパス
+    - '#Undefined variable: \$this#' #　同上
+    - '#Undefined variable: \$factory#' # DB の factoryに誤反応するのでパス
+    - '#Call to an undefined method Illuminate\\Support\\Fluent::#'
+    - '#Access to an undefined property Illuminate\\Http\\Request::\$#'

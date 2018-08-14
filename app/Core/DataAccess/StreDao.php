@@ -32,7 +32,7 @@ abstract class StreDao
     }
 
     /**
-     * @return Collection<StreDto>
+     * @return Collection[StreDto]
      */
     public function all() : Collection
     {
@@ -41,11 +41,6 @@ abstract class StreDao
         });
     }
 
-    /**
-     * @param mixed $dtoId
-     * @return StreDto
-     * @phan-return mixed
-     */
     public function findOrFail($dtoId)
     {
         return new static::$dtoClass($this->repo->findOrFail($dtoId));

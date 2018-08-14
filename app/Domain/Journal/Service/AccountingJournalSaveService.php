@@ -6,6 +6,8 @@ namespace App\Domain\Journal\Service;
 use App\Domain\Account\Dao\AccountTitleDao;
 use App\Domain\Journal\Dao\AccountingJournalDao;
 use App\Domain\Journal\Dto\AccountingJournal;
+use App\Exceptions\StreException;
+use Illuminate\Support\Collection;
 
 class AccountingJournalSaveService
 {
@@ -50,6 +52,9 @@ class AccountingJournalSaveService
     {
         return \DB::transaction(function () use ($journal) {
             $old = $this->dao->findOrFail($journal->id);
+            if ($old instanceof Collection) {
+                throw new StreException();
+            }
             $this->validate($journal, $old);
             $new = $old->fill($journal);
             $j = $this->dao->save($new);

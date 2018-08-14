@@ -26,17 +26,25 @@ class AccountingJournalDao
         $this->accountDao = $accountDao;
     }
 
-    public function findOrFail(int $id) : AccountingJournal
+    /**
+     * @return AccountingJournal|Collection[AccountingJournal]
+     */
+    public function findOrFail(int $id)
     {
-        return new AccountingJournal(
-            $this->repo->findOrFail($id)
-        );
+        $model = $this->repo->findOrFail($id);
+        if ($model instanceof Collection) {
+            return $model->map(function ($m) {
+                new AccountingJournal($m);
+            });
+        } else {
+            return new AccountingJournal($model);
+        }
     }
 
     public function findOrFailByAccount(AccountTitle $debit, AccountTitle $credit) : AccountingJournal
     {
         return new AccountingJournal(
-            $this->repo->where(['debit_account_id' => $debit->Id, 'credit_account_id' => $credit->Id])
+            $this->repo->where(['debit_account_id' => $debit->id, 'credit_account_id' => $credit->id])
                 ->firstOrFail()
         );
     }
@@ -45,7 +53,7 @@ class AccountingJournalDao
      * @param int    $accountId
      * @param Carbon $startInclusive
      * @param Carbon $endExclusive
-     * @return Collection<AccountingJournal>
+     * @return Collection[AccountingJournal]
      */
     public function listByAccountIdAndPeriod(int $accountId, Carbon $startInclusive, Carbon $endExclusive) : Collection
     {
@@ -88,13 +96,13 @@ class AccountingJournalDao
 
         foreach ($debitSums as $d) {
             $type = new AccountTitleType($d->type);
-            $result[$d->id] = $type->isDebitSide() ? +$d->amount : -$d->amount;
+            $result[(int)$d->id] = (int)($type->isDebitSide() ? +$d->amount : -$d->amount);
         }
 
         foreach ($creditSums as $c) {
             $type = new AccountTitleType($c->type);
             $diff = $type->isDebitSide() ? -$c->amount : +$c->amount;
-            $result[$c->id] = isset($result[$c->id]) ? $result[$c->id] + $diff : $diff;
+            $result[(int)$c->id] = (int)(isset($result[$c->id]) ? $result[$c->id] + $diff : $diff);
         }
         return $result;
     }
@@ -119,10 +127,6 @@ class AccountingJournalDao
             ->get()[0]->balance ?? 0;
     }
 
-    /**
-     * @suppress PhanTypeMismatchArgument _ide_helper の groupBy() の定義がおかしい...
-     * @suppress PhanParamTooMany 同上
-     */
     private function sumOneSideForTypes(array $accountTypes, string $side) : Collection
     {
         return $this->repo->select([
@@ -132,7 +136,7 @@ class AccountingJournalDao
         ])
             ->join('account_title', 'accounting_journal.' . $side . '_account_id', '=', 'account_title.id')
             ->whereIn('account_title.type', $accountTypes)
-            ->groupBy('account_title.type', 'account_title.id')
+            ->groupBy(['account_title.type', 'account_title.id'])
             ->get();
     }
 }

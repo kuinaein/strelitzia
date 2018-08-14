@@ -18,7 +18,7 @@ abstract class StreDtoLoadService
     }
 
     /**
-     * @return Collection<StreDto>
+     * @return Collection[StreDto]
      */
     public function all() : Collection
     {
@@ -33,7 +33,7 @@ abstract class StreDtoLoadService
      */
     public function find($id)
     {
-        return \DB::transaction(function () {
+        return \DB::transaction(function () use ($id) {
             return $this->dao->findOrFail($id);
         });
     }

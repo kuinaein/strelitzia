@@ -6,6 +6,9 @@ namespace App\Domain\Auth\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * @method static UserModel create(array $attrs)
+ */
 class UserModel extends Authenticatable
 {
     use Notifiable;

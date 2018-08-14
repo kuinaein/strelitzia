@@ -47,14 +47,14 @@ class BsAccountSaveService
             $isAsset = $bsAccount->type === AccountTitleType::ASSET;
             $j = new AccountingJournal();
       // MySQLのDATE型の最小値は1000-01-01なので一応そちらに合わせておく
-            $j->journalDate = Carbon::createFromDate(1000, 1, 1);
+            $j->journalDate = (string)Carbon::createFromDate(1000, 1, 1);
             $j->debitAccountId = $isAsset ? $a->id : $op->id;
             $j->creditAccountId = $isAsset ? $op->id : $a->id;
             $j->amount = $openingBalance;
             $this->journalDao->save($j);
             return $a;
         });
-        logger()->notice('資産・負債科目の追加', ['新科目' => $a]);
+        optional(logger())->notice('資産・負債科目の追加', ['新科目' => $a]);
         return $a;
     }
 
@@ -80,7 +80,7 @@ class BsAccountSaveService
             $opJournal->amount = $openingBalance;
             $a = $this->dao->updateOrFail($new);
             $this->journalDao->save($opJournal);
-            logger()->notice('資産・負債科目の更新', ['科目' => $a]);
+            optional(logger())->notice('資産・負債科目の更新', ['科目' => $a]);
             return $a;
         });
     }
