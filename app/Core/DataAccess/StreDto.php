@@ -36,7 +36,7 @@ abstract class StreDto implements Arrayable, \JsonSerializable
                 switch ($k) {
                     case 'id':
                     case 'updatedAt':
-  // 通常fillableではないがバリデーションのために必要
+                        // 通常fillableではないがバリデーションのために必要
                         $this->model->{snake_case($k)} = $v;
                         break;
                     default:

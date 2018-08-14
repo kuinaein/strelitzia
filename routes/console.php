@@ -62,12 +62,15 @@ Artisan::command('stre:dev', function () : void {
 })->describe('開発環境として起動');
 
 Artisan::command('stre:cs', function () {
+    $this->info('phpcbf...');
     passthru(base_path('vendor/bin/phpcbf') . ' --standard=' . base_path('phpcs.xml'));
+    $this->info('phpcs...');
     passthru(base_path('vendor/bin/phpcs') . ' --standard=' . base_path('phpcs.xml'));
+    $this->info('phan...');
     passthru(base_path('vendor/bin/phan') . ' -p');
 
     $buf = [];
-    $this->info('PHPMD 実行中...');
+    $this->info('PHPMD...');
     exec(base_path('vendor/bin/phpmd ') . implode([
         app_path(),
         base_path('tests'),
@@ -78,11 +81,13 @@ Artisan::command('stre:cs', function () {
     file_put_contents(base_path('phpmd-result.html'), $buf);
     exec('xdg-open ' . base_path('phpmd-result.html'));
 
+    $this->info('phpcpd...');
     passthru(base_path('vendor/bin/phpcpd') . ' --min-tokens 30 ' . implode([
         app_path(),
         base_path('tests'),
         base_path('routes'),
         config_path(),
     ], ' '));
+
     passthru('npm run lint-fix');
 })->describe('lint, 静的解析とコード整形');

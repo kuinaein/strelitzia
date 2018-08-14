@@ -17,6 +17,11 @@ return [
         'vendor',
     ],
 
+    // 解析・検査対象から除外
+    'exclude_file_list' => [
+        'vendor/nesbot/carbon/src/JsonSerializable.php',
+    ],
+
     // 解析チェックの対象から除外するディレクトリ。
     'exclude_analysis_directory_list' => [
         'vendor',
@@ -24,7 +29,7 @@ return [
     ],
 
     'suppress_issue_types' => [
+        // クロージャの $this が取れないのでパス
         'PhanUndeclaredVariable',
-        'PhanRedefinedInheritedInterface',
     ],
 ];
