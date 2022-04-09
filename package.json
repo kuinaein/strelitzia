@@ -22,7 +22,7 @@
     "font-awesome": "^4.7.0",
     "jquery-slim": "^3.0.0",
     "laravel-mix": "^2.1.11",
-    "moment": "^2.22.2",
+    "moment": "^2.29.2",
     "popper.js": "^1.14.3",
     "pug-html-loader": "^1.1.5",
     "vue": "^2.5.7",
